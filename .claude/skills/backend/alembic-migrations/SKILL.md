@@ -1,6 +1,6 @@
 ---
 name: alembic-migrations
-description: Database migration management for this project using Alembic. Use when creating/applying migrations after model changes. Critical rule - ALWAYS use --autogenerate, NEVER edit migration files manually (except data migrations).
+description: Database migration management using Alembic. Use when creating/applying migrations after model changes. Critical rule - ALWAYS use --autogenerate, NEVER edit migration files manually (except data migrations). Framework-agnostic, works with any Python project using Alembic.
 ---
 
 # Alembic Database Migrations

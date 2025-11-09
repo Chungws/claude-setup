@@ -1,6 +1,6 @@
 ---
 name: backend-tdd-workflow
-description: Test-Driven Development workflow for this project backend. Use when implementing backend features, writing tests, or following TDD practices. Covers Red-Green-Refactor cycle, AAA pattern, and pytest usage.
+description: Test-Driven Development workflow for backend development. Use when implementing backend features, writing tests, or following TDD practices. Covers Red-Green-Refactor cycle, AAA pattern, and test execution. Framework-agnostic principles applicable to any backend project.
 ---
 
 # Backend TDD Workflow

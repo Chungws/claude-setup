@@ -1,6 +1,6 @@
 ---
 name: nextjs-rsc-patterns
-description: Next.js React Server Components patterns for this project. Use when building frontend features. Critical rules - page.tsx is async Server Component, use *-client.tsx for interactivity, router.refresh() after mutations, apiClient for API calls.
+description: Next.js React Server Components patterns. Use when building frontend features. Critical rules - page.tsx is async Server Component, use *-client.tsx for interactivity, router.refresh() after mutations, apiClient for API calls.
 ---
 
 # Next.js RSC (React Server Components) Patterns

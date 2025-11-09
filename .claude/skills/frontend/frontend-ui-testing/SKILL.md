@@ -1,6 +1,6 @@
 ---
 name: frontend-ui-testing
-description: Frontend UI testing with Chrome DevTools MCP for VLA Arena. Use when verifying UI changes. Critical rule - MANDATORY Chrome DevTools MCP verification for all UI changes before committing.
+description: Frontend UI testing with Chrome DevTools MCP. Use when verifying UI changes. Critical rule - MANDATORY Chrome DevTools MCP verification for all UI changes before committing.
 ---
 
 # Frontend UI Testing with Chrome DevTools MCP

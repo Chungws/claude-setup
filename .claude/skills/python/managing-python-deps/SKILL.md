@@ -1,13 +1,13 @@
 ---
 name: managing-python-deps
-description: Python dependency management for this project using uv (NOT pip). Use when adding/removing packages, running commands, or managing dependencies. Critical rule - NEVER use pip install or edit pyproject.toml directly.
+description: Python dependency management using uv (NOT pip). Use when adding/removing packages, running commands, or managing dependencies. Critical rule - NEVER use pip install or edit pyproject.toml directly.
 ---
 
 # Managing Python Dependencies with uv
 
 ## 🔴 CRITICAL RULES
 
-**This project uses `uv` for ALL dependency management.**
+**Use `uv` for ALL dependency management.**
 
 **NEVER use:**
 - ❌ `pip install`
@@ -21,7 +21,7 @@ description: Python dependency management for this project using uv (NOT pip). U
 
 ## 📦 Workspace Structure
 
-**This project uses uv workspace with centralized dev dependencies:**
+**Use uv workspace with centralized dev dependencies:**
 
 ```
 project root/
@@ -150,7 +150,7 @@ uvx isort .                       # isort not needed (ruff does this)
 - `uv run` → Uses project's dependencies
 - `uvx` → Runs tool in isolated environment (like `npx`)
 
-**Note:** This project does NOT use isort. Ruff handles import sorting with the `I` rule.
+**Note:** When using ruff, isort is not needed. Ruff handles import sorting with the `I` rule.
 
 ## Syncing Dependencies
 

@@ -1,6 +1,6 @@
 ---
 name: using-shadcn-components
-description: shadcn/ui component usage for this project. Use when building UI. Critical rules - ALWAYS use shadcn/ui components (NOT raw HTML), npx shadcn@latest add to install components, NEVER edit components/ui/ directly.
+description: shadcn/ui component usage. Use when building UI. Critical rules - ALWAYS use shadcn/ui components (NOT raw HTML), npx shadcn@latest add to install components, NEVER edit components/ui/ directly.
 ---
 
 # shadcn/ui Component Usage

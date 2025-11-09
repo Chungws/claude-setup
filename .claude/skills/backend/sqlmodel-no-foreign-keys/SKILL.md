@@ -1,17 +1,17 @@
 ---
 name: sqlmodel-no-foreign-keys
-description: SQLModel database modeling for this project with strict NO Foreign Keys policy (ADR-001). Use when defining database models, creating migrations, handling table relationships, or reviewing database code. Provides patterns for index-based references and service-layer data integrity management.
+description: SQLModel database modeling with strict NO Foreign Keys policy (ADR-001). Use when defining database models, creating migrations, handling table relationships, or reviewing database code. Provides patterns for index-based references and service-layer data integrity management.
 ---
 
 # SQLModel - No Foreign Keys
 
 ## Overview
 
-This skill provides SQLModel patterns for this project, which **absolutely prohibits** database-level Foreign Key constraints per ADR-001. Use this skill when working with database models, migrations, or any code that references relationships between tables.
+This skill provides SQLModel patterns that **absolutely prohibit** database-level Foreign Key constraints per ADR-001. Use this skill when working with database models, migrations, or any code that references relationships between tables.
 
 ## 🔴 CRITICAL RULE: No Foreign Keys
 
-**Foreign Keys are ABSOLUTELY PROHIBITED in this project.**
+**Foreign Keys are ABSOLUTELY PROHIBITED.**
 
 ### ❌ NEVER Do This
 

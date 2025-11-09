@@ -1,6 +1,6 @@
 ---
 name: fixing-linting-errors
-description: Systematic workflow for fixing Python linting errors with ruff in uv workspace projects. Use when encountering ruff linting errors or when running code quality checks. Critical rule - ALWAYS run ruff and pytest from project root, not from sub-packages. (project)
+description: Systematic workflow for fixing Python linting errors with ruff in uv workspace projects. Use when encountering ruff linting errors or when running code quality checks. Critical rule - ALWAYS run ruff and pytest from project root, not from sub-packages.
 ---
 
 # Fixing Linting Errors
@@ -9,7 +9,7 @@ Systematic workflow for resolving Python linting errors using ruff in uv workspa
 
 ## Overview
 
-This skill provides a step-by-step process for fixing linting errors detected by ruff, the Python linter and formatter used in this project. Follow this workflow when ruff checks fail or when preparing code for commit.
+This skill provides a step-by-step process for fixing linting errors detected by ruff, the Python linter and formatter. Follow this workflow when ruff checks fail or when preparing code for commit.
 
 **Key Principle:** All linting and testing commands MUST be run from the project root directory, never from sub-packages (backend, worker, shared). This ensures consistent behavior across the workspace.
 

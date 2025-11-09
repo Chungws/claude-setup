@@ -1,6 +1,6 @@
 ---
 name: fastapi-patterns
-description: FastAPI architecture patterns for this project. Use when building backend features. Critical rules - 4-layer structure (models → schemas → service → router), business logic in service layer, thin routers, async/await for all DB calls.
+description: FastAPI architecture patterns. Use when building backend features. Critical rules - 4-layer structure (models → schemas → service → router), business logic in service layer, thin routers, async/await for all DB calls.
 ---
 
 # FastAPI Architecture Patterns

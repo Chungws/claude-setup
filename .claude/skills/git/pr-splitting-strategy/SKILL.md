@@ -31,7 +31,7 @@ Split design documentation from implementation to enable early feedback on archi
 3. **PR 3: Utilities** - Helper functions, shared utilities, migrations
 4. **PR 4+: Implementation** - Actual business logic, feature components
 
-**Example from this project (VLA Server Microservice):**
+**Example:**
 ```
 PR #31: Documentation (534 lines)
 ├─ WORKSPACE/FEATURES/002_VLA_Server.md (microservice design)
@@ -130,7 +130,7 @@ When adding infrastructure or refactoring, split by dependency order.
 3. **Integration/glue code** - Depend on PR 1 & 2
 4. **Deprecation/cleanup** - Remove old code after new code works
 
-**Example from this project:**
+**Example:**
 ```
 PR #32: vla-server-base (foundation)
 └─ No dependencies

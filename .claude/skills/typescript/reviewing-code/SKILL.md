@@ -1,6 +1,6 @@
 ---
 name: reviewing-code
-description: Self code review checklist for VLA Arena. Use before creating PR. Critical rules - review before PR, check conventions (NO FK, TDD, RSC), run all tests (pytest, lint), verify UI with Chrome DevTools MCP.
+description: Self code review checklist. Use before creating PR. Critical rules - review before PR, check conventions, run all tests (lint, format, tests), verify changes.
 ---
 
 # Self Code Review Checklist

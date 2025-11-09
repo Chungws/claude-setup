@@ -1,6 +1,6 @@
 ---
-name: committing-changes
-description: Git commit guidelines for VLA Arena. Use when creating commits or reviewing commit messages. Covers commit format (<type>: <subject>), types, granular commits, and Co-authored-by attribution.
+name: git-committing
+description: Git commit guidelines for any project. Use when creating commits or reviewing commit messages. Covers conventional commits format, granular commit strategy, and Co-authored-by attribution. Framework and language agnostic.
 ---
 
 # Committing Changes

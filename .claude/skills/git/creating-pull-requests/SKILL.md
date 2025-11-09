@@ -1,6 +1,6 @@
 ---
 name: creating-pull-requests
-description: GitHub Pull Request creation for this project. Use when creating PRs. Critical rules - English language, target develop branch, <300 lines per PR, separate commits for logical units.
+description: Pull Request creation for GitHub/GitLab. Use when creating PRs/MRs. Critical rules - granular commits, PR size limits, clear description structure. Platform and language agnostic.
 ---
 
 # Creating Pull Requests (PR)

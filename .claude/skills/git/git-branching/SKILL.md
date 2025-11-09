@@ -1,6 +1,6 @@
 ---
 name: git-branching
-description: Git branching strategy (Git Flow) for this project. Use when creating/managing branches. Critical rules - ALWAYS check branch before work, NEVER work on develop directly, use feature/* branches, target develop for PRs.
+description: Git branching strategy (Git Flow) for software projects. Use when creating/managing branches. Critical rules - ALWAYS check branch before work, NEVER work on main branch directly, use feature branches, target main development branch for PRs. Framework and language agnostic.
 ---
 
 # Git Branching Strategy (Git Flow)
