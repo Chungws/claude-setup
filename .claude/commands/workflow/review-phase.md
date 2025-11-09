@@ -8,9 +8,9 @@ Perform self code review and document updates before creating PR.
 
 ## Steps
 
-1. **Update main branch (CRITICAL!)**
-   - Update main development branch, then return to current branch
-   - Check changes against latest main branch
+1. **Update develop branch (CRITICAL!)**
+   - Update develop, then return to current branch
+   - Check changes against latest develop
 
 2. **Analyze changes**
    - Check changed files and line count

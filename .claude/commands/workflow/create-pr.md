@@ -34,7 +34,7 @@ Perform commit, push, and PR/MR creation after passing `/review-phase`.
 5. **Push and create PR/MR**
    - Push branch
    - Create PR/MR (use GitHub MCP or GitLab MCP if available)
-   - Target: main development branch (usually `develop` or `main`)
+   - Target: develop
 
 6. **Report PR info**
    - Output PR URL and number
@@ -44,7 +44,7 @@ Perform commit, push, and PR/MR creation after passing `/review-phase`.
 
 - **Title**: `<type>: <description>`
 - **Body**: Summary, changes, test plan, impact
-- **Target**: Main development branch (check project conventions)
+- **Target**: develop
 
 ## Important
 
