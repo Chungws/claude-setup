@@ -9,8 +9,8 @@ Create a new feature specification document in WORKSPACE/FEATURES/ folder.
 ## Steps
 
 1. **Gather feature information**
-   - Feature name (English, for filename)
-   - Feature name (Korean)
+   - Feature name (for filename, kebab-case recommended)
+   - Feature display name (human-readable)
    - Goals and background
    - Key requirements
 

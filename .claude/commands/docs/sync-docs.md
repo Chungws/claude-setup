@@ -103,7 +103,7 @@ Check if WORKSPACE documents are synchronized with actual code.
    - Check if bad practice examples are actually used
 
 2. **Comment language verification** (Backend)
-   - Search for Korean comments (refer to committing-changes skill)
+   - Check for non-English comments if project requires English-only (refer to git-committing skill)
 
 ## Important
 
