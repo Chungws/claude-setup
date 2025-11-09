@@ -1,10 +1,10 @@
 ---
-description: Create GitHub PR with English format after code review
+description: Create GitHub/GitLab PR/MR after code review
 ---
 
-# Create GitHub PR
+# Create Pull Request
 
-Perform commit, push, and PR creation after passing `/review-phase`.
+Perform commit, push, and PR/MR creation after passing `/review-phase`.
 
 ## Prerequisites
 
@@ -31,10 +31,10 @@ Perform commit, push, and PR creation after passing `/review-phase`.
    - MUST create granular, logical commits (NOT one giant commit)
    - Keep each commit small and focused (10-50 lines recommended)
 
-5. **Push and create PR**
+5. **Push and create PR/MR**
    - Push branch
-   - Create PR with GitHub MCP (in English)
-   - Target: develop
+   - Create PR/MR (use GitHub MCP or GitLab MCP if available)
+   - Target: main development branch (usually `develop` or `main`)
 
 6. **Report PR info**
    - Output PR URL and number
@@ -42,10 +42,9 @@ Perform commit, push, and PR creation after passing `/review-phase`.
 
 ## PR Writing Rules
 
-- **Language**: English
 - **Title**: `<type>: <description>`
 - **Body**: Summary, changes, test plan, impact
-- **Target**: develop
+- **Target**: Main development branch (check project conventions)
 
 ## Important
 

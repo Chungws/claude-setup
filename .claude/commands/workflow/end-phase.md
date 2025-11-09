@@ -13,8 +13,8 @@ Complete the current phase and prepare for the next phase.
 
 ## Steps
 
-1. **Update develop branch**
-   - Switch to develop branch
+1. **Update main development branch**
+   - Switch to main development branch
    - Pull latest changes
 
 2. **Clean up local branches**
