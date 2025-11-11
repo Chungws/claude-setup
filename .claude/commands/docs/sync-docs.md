@@ -10,14 +10,13 @@ Check if WORKSPACE documents are synchronized with actual code.
 
 1. **Verify code patterns**
 
-   a. **Frontend reference structure verification**
-   - Use existing `announcements/` module as reference structure
-   - Check actual `frontend/app/(dashboard)/announcements/` folder structure
+   a. **Frontend structure verification**
+   - Check existing frontend modules follow consistent structure
    - Verify filename pattern matches (page.tsx, *-client.tsx, service.ts, use-*.ts)
 
-   b. **Backend pattern verification**
-   - Use existing module structure as reference pattern
-   - Compare with actual backend folder structure (models.py, schemas.py, service.py, router.py)
+   b. **Backend structure verification**
+   - Check existing backend modules follow consistent structure
+   - Verify file pattern matches (models.py, schemas.py, service.py, router.py)
 
 2. **Verify FEATURES checklists**
 
@@ -47,7 +46,7 @@ Check if WORKSPACE documents are synchronized with actual code.
    - Check if bad patterns are actually used (FK usage, raw HTML, etc.)
 
    b. **Verify referenced file paths**
-   - File paths mentioned in docs (e.g., `backend/app/middo/models.py`)
+   - File paths mentioned in docs
    - Check if files actually exist
 
 4. **Verify WORKSPACE folder structure**
@@ -63,8 +62,8 @@ Check if WORKSPACE documents are synchronized with actual code.
 5. **Report results**
 
    **Matching items:**
-   - ✅ Frontend announcements/ structure matches
-   - ✅ Backend module pattern matches
+   - ✅ Frontend modules follow consistent structure
+   - ✅ Backend modules follow consistent pattern
    - ✅ FEATURES checklist synchronized
 
    **Mismatches:**
@@ -84,8 +83,8 @@ Check if WORKSPACE documents are synchronized with actual code.
 ### Required verification items
 
 1. **Code pattern consistency**
-   - Frontend: Check announcements/ module structure (page.tsx, *-client.tsx, service.ts, use-*.ts)
-   - Backend: Check existing module structure (models.py, schemas.py, service.py, router.py)
+   - Frontend: Check module structure (page.tsx, *-client.tsx, service.ts, use-*.ts)
+   - Backend: Check module structure (models.py, schemas.py, service.py, router.py)
 
 2. **FEATURES checklists**
    - Checklists in all `FEATURES/*.md` files
@@ -93,7 +92,7 @@ Check if WORKSPACE documents are synchronized with actual code.
 
 3. **File path references**
    - All file paths directly referenced in docs
-   - Example: `backend/app/middo/models.py:line_number`
+   - Example: `backend/app/{module}/models.py:line_number`
 
 ### Optional verification items
 

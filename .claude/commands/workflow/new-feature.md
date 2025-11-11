@@ -16,7 +16,7 @@ Create a new feature specification document in WORKSPACE/FEATURES/ folder.
 
 2. **Plan phase breakdown**
    - Break feature into phases
-   - Each phase = 1-2 MR units
+   - Each phase = 1-2 MR/PR units
    - Create checklist for each phase
 
 3. **Analyze tech stack**
@@ -29,7 +29,7 @@ Create a new feature specification document in WORKSPACE/FEATURES/ folder.
    - Structure: Overview, Phase plan, Tech stack, Data models
 
 5. **Update ROADMAP**
-   - Add to "Current Focus" section
+   - Add to "Planned Features" or "Backlog" section
 
 6. **User approval**
    - Review and modify created spec
@@ -37,7 +37,7 @@ Create a new feature specification document in WORKSPACE/FEATURES/ folder.
 ## Important
 
 - Read WORKSPACE/00_PROJECT.md first (project policies)
-- Keep phases small (target < 300 lines per MR)
+- Keep phases small (target < 300 lines per MR/PR)
 
 ## Next Steps
 

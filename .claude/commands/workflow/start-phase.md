@@ -13,7 +13,7 @@ Start a new phase of development.
    - If not develop, move and update
 
 2. **Gather basic info**
-   - Feature name (e.g., translation-evaluation)
+   - Feature name (e.g., user-authentication, data-export)
    - Phase number (e.g., phase-1, phase-2)
 
 3. **Create feature branch**
@@ -35,5 +35,5 @@ Start a new phase of development.
 ## Next Steps
 
 ```
-After work complete → /verify-phase
+After work complete → /review-phase
 ```

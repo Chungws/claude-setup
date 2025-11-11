@@ -30,7 +30,6 @@ Execute after `/new-feature` and before `/start-phase` to clarify requirements a
 Ask user:
 ```
 Which feature would you like to clarify?
-Example: WORKSPACE/FEATURES/TRANSLATION_EVALUATION.md
 ```
 
 Read and understand the FEATURES document.
@@ -149,28 +148,7 @@ Add user answers to FEATURES document:
 
 ### Steps
 
-#### 1️⃣ Understand codebase patterns
-
-**Check Backend patterns:**
-```bash
-# Check existing module structure
-ls backend/app/announcements/
-ls backend/app/middo/
-```
-
-**Check Frontend patterns:**
-```bash
-# Check existing page structure
-ls frontend/app/(dashboard)/announcements/
-ls frontend/app/(dashboard)/middo/translation-evaluation/
-```
-
-**Understand development rules:**
-- Backend: TDD, SQLModel, uv, Alembic, FastAPI patterns
-- Frontend: RSC, shadcn/ui, Chrome DevTools MCP
-- Required skills load automatically
-
-#### 2️⃣ Architecture design (3 approaches)
+#### 1️⃣ Architecture design (3 approaches)
 
 **Option A: Minimal Changes**
 - Reuse existing code as much as possible
@@ -208,7 +186,7 @@ ls frontend/app/(dashboard)/middo/translation-evaluation/
 - frontend/app/[existing-page]/page.tsx (modify)
 ```
 
-#### 3️⃣ Present recommendation
+#### 2️⃣ Present recommendation
 
 **Analysis criteria:**
 - Feature complexity (simple/complex)
@@ -243,11 +221,11 @@ ls frontend/app/(dashboard)/middo/translation-evaluation/
 Which option would you like to choose?
 ```
 
-#### 4️⃣ Wait for user selection
+#### 3️⃣ Wait for user selection
 
 **CRITICAL: Don't implement until user selects!**
 
-#### 5️⃣ Add design to FEATURES document
+#### 4️⃣ Add design to FEATURES document
 
 Add selected design to FEATURES document:
 

@@ -18,12 +18,12 @@ Perform self code review and document updates before creating PR.
 
 3. **Check project policies**
    - Read WORKSPACE/00_PROJECT.md
-   - Verify NO FK, PR policies, etc.
+   - Verify project-specific policies
 
 4. **Check conventions**
-   - Backend: TDD, uv, Alembic, ruff
-   - Frontend: RSC, shadcn/ui, Chrome DevTools MCP
+   - Run project quality checks
    - Code consistency and impact analysis
+   - Use project-specific skills for detailed guidelines
 
 5. **Update documentation**
    - Update FEATURES checklist (if phase work)
