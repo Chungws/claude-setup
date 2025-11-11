@@ -30,61 +30,63 @@ app/feature/
 SQLModel database tables:
 
 ```python
-# app/translation/models.py
+# app/product/models.py
 from sqlmodel import Field, SQLModel
 from datetime import datetime
 
-class TranslationResult(SQLModel, table=True):
+class Product(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    sample_id: int = Field(index=True)  # NO foreign_key!
-    result_text: str
-    score: float | None = None
+    name: str
+    description: str | None = None
+    price: float
+    category_id: int = Field(index=True)  # Index for queries
     created_at: datetime = Field(default_factory=datetime.utcnow, index=True)
 ```
 
 **Rules:**
 - Use SQLModel for tables
-- NO foreign keys (index only)
 - Type hints required
 - Index on frequently queried columns
-
-See `sqlmodel-no-foreign-keys` skill for database modeling rules.
+- For database modeling patterns, see `sqlmodel-patterns` skill
 
 ## 2. Schemas Layer (schemas.py)
 
 Pydantic schemas for API:
 
 ```python
-# app/translation/schemas.py
+# app/product/schemas.py
 from pydantic import BaseModel, Field
 from datetime import datetime
 
 # POST request body
-class TranslationResultCreate(BaseModel):
-    sample_id: int
-    result_text: str
-    score: float | None = None
+class ProductCreate(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    category_id: int
 
 # PUT/PATCH request body
-class TranslationResultUpdate(BaseModel):
-    result_text: str | None = None
-    score: float | None = None
+class ProductUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    price: float | None = None
 
 # API response
-class TranslationResultResponse(BaseModel):
+class ProductResponse(BaseModel):
     id: int
-    sample_id: int
-    result_text: str
-    score: float | None
+    name: str
+    description: str | None
+    price: float
+    category_id: int
     created_at: datetime
 
     class Config:
         from_attributes = True  # For SQLModel compatibility
 
 # Query parameters
-class TranslationResultFilter(BaseModel):
-    sample_id: int | None = None
-    min_score: float | None = None
+class ProductFilter(BaseModel):
+    category_id: int | None = None
+    min_price: float | None = None
     limit: int = Field(default=100, le=1000)
 ```
 
@@ -99,39 +101,39 @@ class TranslationResultFilter(BaseModel):
 Business logic and database operations:
 
 ```python
-# app/translation/service.py
+# app/product/service.py
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
-from .models import TranslationResult
-from .schemas import TranslationResultCreate, TranslationResultUpdate
+from .models import Product
+from .schemas import ProductCreate, ProductUpdate
 
-class TranslationService:
-    """Business logic for translations."""
+class ProductService:
+    """Business logic for products."""
 
     @staticmethod
-    async def create_result(
+    async def create_product(
         db: AsyncSession,
-        data: TranslationResultCreate
-    ) -> TranslationResult:
-        """Create translation result."""
-        result = TranslationResult(**data.model_dump())
-        db.add(result)
+        data: ProductCreate
+    ) -> Product:
+        """Create product."""
+        product = Product(**data.model_dump())
+        db.add(product)
         await db.commit()
-        await db.refresh(result)
-        return result
+        await db.refresh(product)
+        return product
 
     @staticmethod
-    async def get_results(
+    async def get_products(
         db: AsyncSession,
-        sample_id: int | None = None,
+        category_id: int | None = None,
         limit: int = 100
-    ) -> list[TranslationResult]:
-        """Get translation results with filters."""
-        statement = select(TranslationResult)
+    ) -> list[Product]:
+        """Get products with filters."""
+        statement = select(Product)
 
-        if sample_id:
+        if category_id:
             statement = statement.where(
-                TranslationResult.sample_id == sample_id
+                Product.category_id == category_id
             )
 
         statement = statement.limit(limit)
@@ -139,37 +141,37 @@ class TranslationService:
         return results.all()
 
     @staticmethod
-    async def update_result(
+    async def update_product(
         db: AsyncSession,
-        result_id: int,
-        data: TranslationResultUpdate
-    ) -> TranslationResult | None:
-        """Update translation result."""
-        result = await db.get(TranslationResult, result_id)
-        if not result:
+        product_id: int,
+        data: ProductUpdate
+    ) -> Product | None:
+        """Update product."""
+        product = await db.get(Product, product_id)
+        if not product:
             return None
 
         # Update only provided fields
         update_data = data.model_dump(exclude_unset=True)
         for key, value in update_data.items():
-            setattr(result, key, value)
+            setattr(product, key, value)
 
-        db.add(result)
+        db.add(product)
         await db.commit()
-        await db.refresh(result)
-        return result
+        await db.refresh(product)
+        return product
 
     @staticmethod
-    async def delete_result(
+    async def delete_product(
         db: AsyncSession,
-        result_id: int
+        product_id: int
     ) -> bool:
-        """Delete translation result."""
-        result = await db.get(TranslationResult, result_id)
-        if not result:
+        """Delete product."""
+        product = await db.get(Product, product_id)
+        if not product:
             return False
 
-        await db.delete(result)
+        await db.delete(product)
         await db.commit()
         return True
 ```
@@ -186,101 +188,101 @@ class TranslationService:
 API endpoints (thin layer):
 
 ```python
-# app/translation/router.py
+# app/product/router.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.database import get_db
 from .schemas import (
-    TranslationResultCreate,
-    TranslationResultUpdate,
-    TranslationResultResponse,
-    TranslationResultFilter
+    ProductCreate,
+    ProductUpdate,
+    ProductResponse,
+    ProductFilter
 )
-from .service import TranslationService
+from .service import ProductService
 
 router = APIRouter(
-    prefix="/translations",
-    tags=["translations"]
+    prefix="/products",
+    tags=["products"]
 )
 
 @router.post(
     "/",
-    response_model=TranslationResultResponse,
+    response_model=ProductResponse,
     status_code=status.HTTP_201_CREATED
 )
-async def create_translation_result(
-    data: TranslationResultCreate,
+async def create_product(
+    data: ProductCreate,
     db: AsyncSession = Depends(get_db)
 ):
-    """Create a new translation result."""
-    result = await TranslationService.create_result(db, data)
-    return result
+    """Create a new product."""
+    product = await ProductService.create_product(db, data)
+    return product
 
 @router.get(
     "/",
-    response_model=list[TranslationResultResponse]
+    response_model=list[ProductResponse]
 )
-async def get_translation_results(
-    filters: TranslationResultFilter = Depends(),
+async def get_products(
+    filters: ProductFilter = Depends(),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get translation results with filters."""
-    results = await TranslationService.get_results(
+    """Get products with filters."""
+    products = await ProductService.get_products(
         db,
-        sample_id=filters.sample_id,
+        category_id=filters.category_id,
         limit=filters.limit
     )
-    return results
+    return products
 
 @router.get(
-    "/{result_id}",
-    response_model=TranslationResultResponse
+    "/{product_id}",
+    response_model=ProductResponse
 )
-async def get_translation_result(
-    result_id: int,
+async def get_product(
+    product_id: int,
     db: AsyncSession = Depends(get_db)
 ):
-    """Get translation result by ID."""
-    result = await db.get(TranslationResult, result_id)
-    if not result:
+    """Get product by ID."""
+    product = await db.get(Product, product_id)
+    if not product:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Translation result not found"
+            detail="Product not found"
         )
-    return result
+    return product
 
 @router.put(
-    "/{result_id}",
-    response_model=TranslationResultResponse
+    "/{product_id}",
+    response_model=ProductResponse
 )
-async def update_translation_result(
-    result_id: int,
-    data: TranslationResultUpdate,
+async def update_product(
+    product_id: int,
+    data: ProductUpdate,
     db: AsyncSession = Depends(get_db)
 ):
-    """Update translation result."""
-    result = await TranslationService.update_result(db, result_id, data)
-    if not result:
+    """Update product."""
+    product = await ProductService.update_product(db, product_id, data)
+    if not product:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Translation result not found"
+            detail="Product not found"
         )
-    return result
+    return product
 
 @router.delete(
-    "/{result_id}",
+    "/{product_id}",
     status_code=status.HTTP_204_NO_CONTENT
 )
-async def delete_translation_result(
-    result_id: int,
+async def delete_product(
+    product_id: int,
     db: AsyncSession = Depends(get_db)
 ):
-    """Delete translation result."""
-    deleted = await TranslationService.delete_result(db, result_id)
+    """Delete product."""
+    deleted = await ProductService.delete_product(db, product_id)
     if not deleted:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Translation result not found"
+            detail="Product not found"
         )
 ```
 

@@ -18,30 +18,30 @@ description: Test-Driven Development workflow for backend development. Use when 
 Write a test that **fails** because the feature doesn't exist yet.
 
 ```python
-# tests/test_translation.py
+# tests/test_feature.py
 import pytest
-from app.translation.service import TranslationService
+from app.feature.service import FeatureService
 
 @pytest.mark.asyncio
-async def test_create_translation_result(db_session):
+async def test_create_feature_item(db_session):
     # Arrange
-    service = TranslationService(db_session)
+    service = FeatureService(db_session)
     data = {
-        "sample_id": 1,
-        "result_text": "Hello World"
+        "name": "Test Item",
+        "description": "Hello World"
     }
 
     # Act
-    result = await service.create_result(data)
+    result = await service.create_item(data)
 
     # Assert
     assert result.id is not None
-    assert result.result_text == "Hello World"
+    assert result.description == "Hello World"
 ```
 
 **Run test - it MUST fail:**
 ```bash
-uv run pytest -s tests/test_translation.py::test_create_translation_result
+uv run pytest -s tests/test_feature.py::test_create_feature_item
 # Expected: FAILED (feature not implemented yet)
 ```
 
@@ -50,23 +50,23 @@ uv run pytest -s tests/test_translation.py::test_create_translation_result
 Write **minimum code** to make the test pass.
 
 ```python
-# app/translation/service.py
-class TranslationService:
+# app/feature/service.py
+class FeatureService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def create_result(self, data: dict) -> TranslationResult:
+    async def create_item(self, data: dict) -> FeatureItem:
         # Minimal implementation
-        result = TranslationResult(**data)
-        self.db.add(result)
+        item = FeatureItem(**data)
+        self.db.add(item)
         await self.db.commit()
-        await self.db.refresh(result)
-        return result
+        await self.db.refresh(item)
+        return item
 ```
 
 **Run test again - it MUST pass:**
 ```bash
-uv run pytest -s tests/test_translation.py::test_create_translation_result
+uv run pytest -s tests/test_feature.py::test_create_feature_item
 # Expected: PASSED
 ```
 
@@ -75,27 +75,27 @@ uv run pytest -s tests/test_translation.py::test_create_translation_result
 Improve code quality while keeping tests passing.
 
 ```python
-# app/translation/service.py (refactored)
-class TranslationService:
+# app/feature/service.py (refactored)
+class FeatureService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def create_result(self, data: dict) -> TranslationResult:
+    async def create_item(self, data: dict) -> FeatureItem:
         # Refactored: Better validation, error handling
-        if not data.get("sample_id"):
-            raise ValueError("sample_id is required")
+        if not data.get("name"):
+            raise ValueError("name is required")
 
-        result = TranslationResult(**data)
-        self.db.add(result)
+        item = FeatureItem(**data)
+        self.db.add(item)
 
         try:
             await self.db.commit()
-            await self.db.refresh(result)
+            await self.db.refresh(item)
         except Exception as e:
             await self.db.rollback()
             raise
 
-        return result
+        return item
 ```
 
 **Run tests again - still passing:**
@@ -127,24 +127,24 @@ def test_example():
 ### ✅ Service Layer: 100% Coverage
 
 ```python
-# test_translation_service.py
+# test_feature_service.py
 
 # Test success case
-async def test_create_result_success(db_session):
+async def test_create_item_success(db_session):
     """Happy path"""
     pass
 
 # Test edge cases
-async def test_create_result_invalid_sample_id(db_session):
-    """sample_id doesn't exist"""
+async def test_create_item_invalid_name(db_session):
+    """name is invalid"""
     pass
 
-async def test_create_result_missing_data(db_session):
+async def test_create_item_missing_data(db_session):
     """Missing required fields"""
     pass
 
 # Test error cases
-async def test_create_result_db_error(db_session):
+async def test_create_item_db_error(db_session):
     """Database error handling"""
     pass
 ```
@@ -152,22 +152,22 @@ async def test_create_result_db_error(db_session):
 ### ✅ Router: Integration Tests
 
 ```python
-# test_translation_router.py
+# test_feature_router.py
 from fastapi.testclient import TestClient
 
-def test_create_result_endpoint(client: TestClient):
+def test_create_item_endpoint(client: TestClient):
     # Arrange
     data = {
-        "sample_id": 1,
-        "result_text": "Hello"
+        "name": "Test Item",
+        "description": "Hello"
     }
 
     # Act
-    response = client.post("/api/v1/translation/results", json=data)
+    response = client.post("/api/v1/features/items", json=data)
 
     # Assert
     assert response.status_code == 201
-    assert response.json()["result_text"] == "Hello"
+    assert response.json()["description"] == "Hello"
 ```
 
 ## Running Tests
@@ -186,13 +186,13 @@ uv run pytest --cov=app --cov-report=term-missing
 
 ```bash
 # Single test file
-uv run pytest -s tests/test_translation.py
+uv run pytest -s tests/test_feature.py
 
 # Single test function
-uv run pytest -s tests/test_translation.py::test_create_result_success
+uv run pytest -s tests/test_feature.py::test_create_item_success
 
 # Tests matching pattern
-uv run pytest -s -k "translation"
+uv run pytest -s -k "feature"
 ```
 
 ### Async Tests
@@ -269,9 +269,9 @@ async def test_with_fixtures(db_session, sample_data):
     assert result.name == sample_data["name"]
 ```
 
-## Pre-Commit Checklist
+## TDD Workflow Checklist
 
-Before committing backend code:
+When following TDD:
 
 - [ ] Wrote tests FIRST (Red phase)
 - [ ] Tests failed initially
