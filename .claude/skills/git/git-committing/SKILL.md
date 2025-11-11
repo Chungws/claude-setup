@@ -165,43 +165,7 @@ git branch --show-current
 git checkout -b feature/your-feature-name
 ```
 
-### 2. Run Ruff Check (Backend Only)
-
-**For backend changes, run ruff before committing:**
-
-```bash
-cd backend
-
-# 1. Check code quality (linting)
-uvx ruff check
-
-# 2. Check formatting
-uvx ruff format --check
-
-# Both must pass!
-# ✅ All checks passed → OK to commit
-# ❌ If errors → fix and run again
-```
-
-**What each command does:**
-- `ruff check` - Code quality (unused imports, bugs, style issues)
-- `ruff format --check` - Code formatting (spacing, line breaks, quotes)
-
-**Auto-fix (during development):**
-```bash
-# Automatically fix issues
-uvx ruff check --fix        # Fix linting issues
-uvx ruff format             # Apply formatting
-```
-
-**Why ruff?**
-- Combines formatting (replaces black) + linting (replaces flake8) + import sorting (replaces isort)
-- One tool does everything
-- Fast and reliable
-
-**Note:** Frontend uses `npm run lint` (different tool)
-
-### 3. Review Changes
+### 2. Review Changes
 
 ```bash
 # See what you're committing
@@ -216,7 +180,7 @@ git diff --cached --stat
 # Keep under 100-200 lines per commit!
 ```
 
-### 4. Write Commit Message
+### 3. Write Commit Message
 
 Use HEREDOC for multi-line messages:
 
@@ -249,22 +213,21 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## Quick Reference
 
 ```bash
-# Complete workflow (Backend)
-cd backend
-uvx ruff check                    # ← Linting (MUST pass!)
-uvx ruff format --check           # ← Formatting (MUST pass!)
-git add file.py
+# 1. Check branch
+git branch --show-current
+# Must be on feature branch!
+
+# 2. Review changes
+git status
+git diff
+git diff --stat
+# Keep under 100-200 lines per commit!
+
+# 3. Stage specific files
+git add path/to/file.py
+
+# 4. Commit with message
 git commit -m "feat: add new feature"
-
-# Auto-fix during development (Backend)
-uvx ruff check --fix              # Fix linting issues
-uvx ruff format                   # Apply formatting
-
-# Complete workflow (Frontend)
-cd frontend
-npm run lint                      # ← MUST pass!
-git add file.tsx
-git commit -m "feat: add new component"
 
 # Multi-line commit with attribution
 git commit -m "$(cat <<'EOF'
@@ -278,64 +241,12 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 EOF
 )"
 
-# Check commit size before committing
-git diff --stat
-# Keep under 100-200 lines!
-
 # View recent commits
 git log --oneline -n 10
+
+# Interactive staging (split changes)
+git add -p file.py
 ```
-
-## Backend Code Style Rules (MUST Follow)
-
-When writing backend Python code:
-
-### 1. Import Location
-✅ **All imports at the top of file**
-❌ **NEVER import in the middle of functions/classes**
-
-```python
-# ✅ CORRECT
-from fastapi import APIRouter
-from sqlmodel import Session
-
-def my_function():
-    ...
-
-# ❌ WRONG
-def my_function():
-    from fastapi import APIRouter  # NO!
-    ...
-```
-
-### 2. Comments in English Only
-✅ **Write all comments in English**
-❌ **NEVER use Korean in comments**
-
-```python
-# ✅ CORRECT
-# Calculate the total score
-total = sum(scores)
-
-# ❌ WRONG
-# 총 점수를 계산합니다  # NO Korean!
-total = sum(scores)
-```
-
-### 3. Type Hints Required
-✅ **Type hints on all function parameters and return values**
-
-```python
-# ✅ CORRECT
-def get_user(user_id: int, db: Session) -> User | None:
-    return db.get(User, user_id)
-
-# ❌ WRONG - Missing type hints
-def get_user(user_id, db):
-    return db.get(User, user_id)
-```
-
-**Note:** Ruff will catch most of these issues automatically.
 
 ## Common Mistakes
 
@@ -345,11 +256,10 @@ def get_user(user_id, db):
 | "feat(backend): add..." | Remove scope, use "feat: add..." |
 | Committing to develop | Create feature branch first |
 | Giant commit (300+ lines) | Split into 10-50 line commits |
-| Not running ruff | Run `uvx ruff check` + `uvx ruff format --check` |
-| Korean comments | Use English only |
-| Missing type hints | Add types to all functions |
 | Missing Co-authored-by | Add Claude attribution |
 | Multiple changes in one commit | One logical change per commit |
+| Past tense in subject | Use imperative mood |
+| Capitalized subject | Start with lowercase |
 
 ---
 

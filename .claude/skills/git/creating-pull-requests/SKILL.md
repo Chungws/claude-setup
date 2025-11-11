@@ -38,16 +38,16 @@ git diff develop --shortstat
 ✅ **CORRECT: Logical separation**
 ```bash
 git log --oneline
-abc1234 test: add translation result endpoint tests
-def5678 feat: add translation result endpoint
-ghi9012 feat: add TranslationResult schema
-jkl3456 feat: add TranslationResult model
+abc1234 test: add user profile endpoint tests
+def5678 feat: add user profile endpoint
+ghi9012 feat: add UserProfile schema
+jkl3456 feat: add UserProfile model
 ```
 
 ❌ **WRONG: Single commit**
 ```bash
 git log --oneline
-abc1234 feat: add translation result feature  # All changes in one commit
+abc1234 feat: add user profile feature  # All changes in one commit
 ```
 
 **Pattern:** models → schemas → service → router → tests
@@ -66,16 +66,15 @@ abc1234 feat: add translation result feature  # All changes in one commit
 ### 1. Pre-PR Checklist
 
 ```bash
-# Backend changes
-cd backend
-uvx ruff check
-uvx ruff format --check
+# Python project checks
+uv run ruff check
+uv run ruff format --check
 uv run pytest -s
 
-# Frontend changes
-cd frontend
+# TypeScript/JavaScript project checks
 npm run lint
-# Manual Chrome DevTools MCP verification if UI changed
+
+# Manual UI verification if UI changed
 
 # Check diff size
 git diff develop --shortstat
@@ -89,20 +88,20 @@ Follow granular commit pattern:
 
 ```bash
 # Commit in logical order
-git add app/translation/models.py
-git commit -m "feat: add TranslationResult model"
+git add app/user/models.py
+git commit -m "feat: add UserProfile model"
 
-git add app/translation/schemas.py
-git commit -m "feat: add TranslationResult schema"
+git add app/user/schemas.py
+git commit -m "feat: add UserProfile schema"
 
-git add app/translation/service.py
-git commit -m "feat: add translation service"
+git add app/user/service.py
+git commit -m "feat: add user profile service"
 
-git add app/translation/router.py
-git commit -m "feat: add translation endpoint"
+git add app/user/router.py
+git commit -m "feat: add user profile endpoint"
 
-git add tests/test_translation.py
-git commit -m "test: add translation tests"
+git add tests/test_user_profile.py
+git commit -m "test: add user profile tests"
 ```
 
 See `committing-changes` skill for commit format rules.
@@ -111,7 +110,7 @@ See `committing-changes` skill for commit format rules.
 
 ```bash
 # Push feature branch
-git push -u origin feature/translation-result
+git push -u origin feature/user-profile
 ```
 
 ### 4. Create PR (Using GitHub MCP)
@@ -119,8 +118,8 @@ git push -u origin feature/translation-result
 ```typescript
 // Use mcp__github__create_pull_request tool
 {
-  "title": "feat: Add translation result storage feature",
-  "head": "feature/translation-result",
+  "title": "feat: Add user profile feature",
+  "head": "feature/user-profile",
   "base": "develop",
   "body": "...",  // See template below
   "draft": false
@@ -131,15 +130,15 @@ git push -u origin feature/translation-result
 
 ```markdown
 ## Summary
-Add TranslationResult model and API endpoints to store and retrieve translation results.
+Add UserProfile model and API endpoints to manage user profile information.
 
 ## Changes
 ### Backend
-- `app/translation/models.py`: Add TranslationResult model
-- `app/translation/schemas.py`: Add TranslationResultCreate, TranslationResultResponse schemas
-- `app/translation/service.py`: Add create_result, get_results service functions
-- `app/translation/router.py`: Add POST /translation-results, GET /translation-results endpoints
-- `tests/test_translation.py`: Add translation result CRUD tests
+- `app/user/models.py`: Add UserProfile model
+- `app/user/schemas.py`: Add UserProfileCreate, UserProfileResponse schemas
+- `app/user/service.py`: Add create_profile, get_profile service functions
+- `app/user/router.py`: Add POST /users/profile, GET /users/profile endpoints
+- `tests/test_user_profile.py`: Add user profile CRUD tests
 
 ## Test Plan
 - [x] Backend tests passing (pytest)
@@ -193,19 +192,19 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Backend Feature:**
 ```markdown
 ## Summary
-Add Human Evaluation feature to allow users to rate translation quality.
+Add Product Catalog feature to allow users to browse and search products.
 
 ## Changes
 ### Backend
-- `app/evaluation/models.py`: Add HumanEvaluation model
-- `app/evaluation/schemas.py`: Add evaluation schemas
-- `app/evaluation/service.py`: Add evaluation save/retrieve logic
-- `app/evaluation/router.py`: Add POST /evaluations endpoint
+- `app/product/models.py`: Add Product model
+- `app/product/schemas.py`: Add product schemas
+- `app/product/service.py`: Add product CRUD operations
+- `app/product/router.py`: Add GET /products, POST /products endpoints
 
 ## Test Plan
 - [x] pytest passing
 - [x] ruff check passing
-- [ ] Manual test: Create and retrieve evaluations
+- [ ] Manual test: Create and retrieve products
 
 ## Impact
 - Breaking Changes: No
@@ -220,18 +219,18 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Frontend Feature:**
 ```markdown
 ## Summary
-Add Translation List page to display saved translation results in a table.
+Add Dashboard page to display user statistics and recent activity.
 
 ## Changes
 ### Frontend
-- `app/(dashboard)/translations/page.tsx`: Server Component for translation list retrieval
-- `app/(dashboard)/translations/translations-client.tsx`: Translation table UI
-- `app/(dashboard)/translations/service.ts`: API call functions
-- `app/(dashboard)/translations/_types.ts`: Translation type definitions
+- `app/(dashboard)/home/page.tsx`: Server Component for dashboard data retrieval
+- `app/(dashboard)/home/dashboard-client.tsx`: Dashboard UI with charts
+- `app/(dashboard)/home/service.ts`: API call functions
+- `app/(dashboard)/home/_types.ts`: Dashboard type definitions
 
 ## Test Plan
 - [x] npm run lint passing
-- [x] Chrome DevTools MCP verification complete (table rendering, button clicks)
+- [x] Manual UI verification complete (charts rendering, data display)
 
 ## Impact
 - Breaking Changes: No
@@ -246,11 +245,11 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Bug Fix:**
 ```markdown
 ## Summary
-Fix 500 error when handling null values in Translation API.
+Fix 500 error when handling null values in User API.
 
 ## Changes
 ### Backend
-- `app/translation/service.py`: Add null value validation
+- `app/user/service.py`: Add null value validation
 
 ## Test Plan
 - [x] pytest passing (null case tests added)
@@ -313,19 +312,19 @@ mcp__github__list_pull_requests({
 mcp__github__create_pull_request({
   owner: "owner-name",
   repo: "repo-name",
-  title: "feat: Add translation result storage",
-  head: "feature/translation-result",
+  title: "feat: Add user profile management",
+  head: "feature/user-profile",
   base: "develop",
   body: `
 ## Summary
-Add TranslationResult model and API endpoints to store and retrieve translation results.
+Add UserProfile model and API endpoints to manage user profile information.
 
 ## Changes
 ### Backend
-- \`app/translation/models.py\`: Add TranslationResult model
-- \`app/translation/schemas.py\`: Add schemas
-- \`app/translation/service.py\`: Add service functions
-- \`app/translation/router.py\`: Add API endpoints
+- \`app/user/models.py\`: Add UserProfile model
+- \`app/user/schemas.py\`: Add schemas
+- \`app/user/service.py\`: Add service functions
+- \`app/user/router.py\`: Add API endpoints
 
 ## Test Plan
 - [x] Backend tests passing
@@ -360,12 +359,12 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## Quick Reference
 
 ```bash
-# Pre-PR checklist (Backend)
-uvx ruff check
-uvx ruff format --check
+# Pre-PR checklist (Python)
+uv run ruff check
+uv run ruff format --check
 uv run pytest -s
 
-# Pre-PR checklist (Frontend)
+# Pre-PR checklist (TypeScript/JavaScript)
 npm run lint
 
 # Check diff size

@@ -60,11 +60,11 @@ git checkout develop
 git pull origin develop
 
 # Create feature branch
-git checkout -b feature/translation-eval-phase-1
+git checkout -b feature/user-auth-phase-1
 
 # Verify you're on new branch
 git branch --show-current
-# Output: feature/translation-eval-phase-1 ✅
+# Output: feature/user-auth-phase-1 ✅
 ```
 
 ### Step 3: Work on Feature
@@ -75,14 +75,14 @@ git branch --show-current
 
 # Commit (see committing-changes skill)
 git add .
-git commit -m "feat: add translation evaluation"
+git commit -m "feat: add user authentication"
 ```
 
 ### Step 4: Push to Remote
 
 ```bash
 # First push (set upstream)
-git push -u origin feature/translation-eval-phase-1
+git push -u origin feature/user-auth-phase-1
 
 # Subsequent pushes
 git push
@@ -107,7 +107,7 @@ git checkout develop
 git pull origin develop
 
 # Delete local feature branch
-git branch -d feature/translation-eval-phase-1
+git branch -d feature/user-auth-phase-1
 
 # Verify clean state
 git branch --show-current
@@ -119,7 +119,7 @@ git branch --show-current
 ### ✅ CORRECT Naming
 
 ```bash
-feature/translation-eval-phase-1
+feature/user-auth-phase-1
 feature/fix-login-bug
 feature/add-user-profile
 feature/refactor-api-client
@@ -130,8 +130,8 @@ feature/refactor-api-client
 ```bash
 bugfix/issue-123          # Use feature/ instead
 refactor/cleanup          # Use feature/ instead
-translation-eval          # Missing feature/ prefix
-feature/TRANSLATION-EVAL  # Use lowercase
+user-auth                 # Missing feature/ prefix
+feature/USER-AUTH         # Use lowercase
 ```
 
 **Pattern:** `feature/<descriptive-name-with-hyphens>`
@@ -212,13 +212,13 @@ git push
 
 ```bash
 # Phase 1: Models and schemas
-feature/translation-eval-phase-1
+feature/payment-system-phase-1
 
 # Phase 2: Service layer
-feature/translation-eval-phase-2
+feature/payment-system-phase-2
 
 # Phase 3: API endpoints
-feature/translation-eval-phase-3
+feature/payment-system-phase-3
 ```
 
 **Workflow:**

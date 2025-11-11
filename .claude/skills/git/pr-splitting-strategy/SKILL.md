@@ -33,23 +33,23 @@ Split design documentation from implementation to enable early feedback on archi
 
 **Example:**
 ```
-PR #31: Documentation (534 lines)
-├─ WORKSPACE/FEATURES/002_VLA_Server.md (microservice design)
-├─ WORKSPACE/FEATURES/001_MVP.md (phase updates)
+PR #1: Documentation (534 lines)
+├─ WORKSPACE/FEATURES/payment_system.md (microservice design)
+├─ WORKSPACE/FEATURES/mvp.md (phase updates)
 └─ WORKSPACE/ROADMAP.md (timeline updates)
 
-PR #32: vla-server-base (532 lines)
-├─ VLAModelAdapter (base class)
-├─ MuJoCoEnvironment (infrastructure)
+PR #2: payment-service-base (532 lines)
+├─ PaymentProcessor (base class)
+├─ PaymentGateway (infrastructure)
 ├─ Settings (configuration)
 └─ Tests (16 tests)
 
-PR #33: model_loader migration (150 lines)
-├─ get_model_xml() utility
+PR #3: payment-validation migration (150 lines)
+├─ validate_payment() utility
 └─ Tests (10 tests)
 
-PR #34: vla-servers/mock (planned)
-└─ Mock service implementation
+PR #4: payment-providers/stripe (planned)
+└─ Stripe provider implementation
 ```
 
 **Benefits:**
@@ -78,11 +78,11 @@ Split by architectural layers to maintain clean separation of concerns.
 
 **Example:**
 ```
-PR 1: Add TranslationResult model (50 lines)
-PR 2: Add TranslationResult schemas (40 lines)
-PR 3: Implement translation evaluation service (80 lines)
-PR 4: Add translation evaluation endpoints (60 lines)
-PR 5: Add translation evaluation tests (70 lines)
+PR 1: Add Product model (50 lines)
+PR 2: Add Product schemas (40 lines)
+PR 3: Implement product catalog service (80 lines)
+PR 4: Add product catalog endpoints (60 lines)
+PR 5: Add product catalog tests (70 lines)
 ```
 
 **Benefits:**
@@ -132,14 +132,14 @@ When adding infrastructure or refactoring, split by dependency order.
 
 **Example:**
 ```
-PR #32: vla-server-base (foundation)
+PR #1: notification-service-base (foundation)
 └─ No dependencies
 
-PR #33: model_loader migration
-└─ Depends on vla-server-base
+PR #2: email-provider implementation
+└─ Depends on notification-service-base
 
-PR #34: vla-servers/mock
-└─ Depends on vla-server-base + model_loader
+PR #3: notification-templates
+└─ Depends on notification-service-base + email-provider
 ```
 
 **Benefits:**
@@ -242,30 +242,30 @@ Is PR > 300 lines?
 
 ## Examples
 
-### Example 1: Large Microservice Architecture (This Project)
+### Example 1: Large Microservice Architecture
 
 **Total changes**: ~1,200 lines
 
 **Split strategy**: Documentation First + Foundation First
 
 ```
-PR #31 (534 lines): Design docs
+PR #1 (534 lines): Design docs
 ├─ microservice architecture
-├─ Python version policy
+├─ API versioning policy
 └─ component diagrams
 
-PR #32 (532 lines): Common library
-├─ VLAModelAdapter base class
-├─ MuJoCoEnvironment wrapper
+PR #2 (532 lines): Common library
+├─ MessageBroker base class
+├─ DatabaseConnection wrapper
 ├─ Settings configuration
 └─ 16 tests
 
-PR #33 (150 lines): Utility migration
-├─ model_loader utility
+PR #3 (150 lines): Utility migration
+├─ message_validator utility
 └─ 10 tests
 
-PR #34 (planned): Mock service
-└─ Implementation using foundation from #32, #33
+PR #4 (planned): Mock service
+└─ Implementation using foundation from #1, #2, #3
 ```
 
 **Result**: 4 reviewable PRs instead of 1 massive 1,200-line PR
