@@ -1,24 +1,24 @@
 ---
 name: frontend-ui-testing
-description: Frontend UI testing with Chrome DevTools MCP. Use when verifying UI changes. Critical rule - MANDATORY Chrome DevTools MCP verification for all UI changes before committing.
+description: Frontend UI testing workflow. Use when verifying UI changes. Critical rule - MANDATORY visual verification for all UI changes before committing.
 ---
 
-# Frontend UI Testing with Chrome DevTools MCP
+# Frontend UI Testing Workflow
 
 ## 🔴 CRITICAL RULE
 
-**UI verification with Chrome DevTools MCP is MANDATORY for all UI changes.**
+**Visual verification is MANDATORY for all UI changes.**
 
-Never commit UI changes without visual verification.
+Never commit UI changes without verifying they work correctly.
 
 ## When to Use This Skill
 
 - After creating/modifying any UI component
 - After changing layout or styles
-- Before creating MR with frontend changes
+- Before creating MR/PR with frontend changes
 - When adding new pages or routes
 
-## Chrome DevTools MCP Verification (REQUIRED)
+## UI Verification Workflow
 
 ### Step 1: Start Dev Server
 
@@ -27,261 +27,97 @@ cd frontend
 npm run dev  # http://localhost:3000
 ```
 
-### Step 2: Navigate to Page
+### Step 2: Navigate and Verify
 
-Use Chrome DevTools MCP to open the page:
+Use browser or Chrome DevTools MCP to:
+1. Navigate to the changed page
+2. Check visual appearance
+3. Test interactive elements
+4. Check browser console for errors
 
-```typescript
-// Example: Open battle page
-mcp__chrome-devtools__navigate_page({
-  url: "http://localhost:3000/battle"
-})
-```
+### Step 3: Run Through Checklist
 
-### Step 3: Take Snapshot
-
-Capture current UI state:
-
-```typescript
-mcp__chrome-devtools__take_snapshot()
-```
-
-This returns:
-- Current page structure (accessibility tree)
-- Visible elements with unique IDs (uid)
-- Text content
-- Interactive elements (buttons, inputs, etc.)
-
-### Step 4: Take Screenshot (Optional)
-
-Save visual evidence:
-
-```typescript
-mcp__chrome-devtools__take_screenshot({
-  filePath: "screenshots/battle-page.png"
-})
-```
-
-### Step 5: Check Console Errors
-
-Verify no JavaScript errors:
-
-```typescript
-mcp__chrome-devtools__list_console_messages()
-```
-
-Look for:
-- ❌ Errors (error type)
-- ⚠️ Warnings (warn type)
-- ✅ Clean console (no errors)
+Complete the verification checklist below before committing.
 
 ## Verification Checklist
 
 When verifying UI changes:
 
-```
-[ ] Dev server running (npm run dev)
-[ ] Page loads without errors
-[ ] New components render correctly
-[ ] Layout not broken
-[ ] Responsive design works (resize browser if needed)
-[ ] Interactive elements clickable
-[ ] No console errors
-[ ] Text/content displays properly
-[ ] Images/icons load correctly
-```
+### Visual Checks
+- [ ] Dev server running (npm run dev)
+- [ ] Page loads without errors
+- [ ] New components render correctly
+- [ ] Layout not broken
+- [ ] Text/content displays properly
+- [ ] Images/icons load correctly
+- [ ] Spacing and alignment correct
 
-## Chrome DevTools MCP Tools
+### Interaction Checks
+- [ ] Buttons clickable and respond
+- [ ] Forms submit correctly
+- [ ] Links navigate properly
+- [ ] Input fields work
+- [ ] Dropdowns/selects functional
+- [ ] Modals/dialogs open/close
 
-### Available Tools
+### Responsive Checks
+- [ ] Desktop layout works
+- [ ] Mobile layout works (resize browser)
+- [ ] Tablet layout works (if applicable)
+- [ ] No horizontal scrolling
 
-```typescript
-// Navigate to page
-mcp__chrome-devtools__navigate_page({
-  url: "http://localhost:3000/path"
-})
-
-// Get page structure (accessibility tree with uids)
-mcp__chrome-devtools__take_snapshot()
-
-// Take screenshot
-mcp__chrome-devtools__take_screenshot({
-  filePath: "screenshots/feature.png",
-  fullPage: false  // true for full page screenshot
-})
-
-// Check console messages
-mcp__chrome-devtools__list_console_messages()
-
-// Click element by uid (from snapshot)
-mcp__chrome-devtools__click({
-  uid: "12"  // uid from snapshot
-})
-
-// Fill input/select by uid
-mcp__chrome-devtools__fill({
-  uid: "15",  // uid from snapshot
-  value: "Test input"
-})
-
-// Wait for text to appear
-mcp__chrome-devtools__wait_for({
-  text: "Success message",
-  timeout: 5000
-})
-
-// Resize viewport
-mcp__chrome-devtools__resize_page({
-  width: 375,   // Mobile width
-  height: 812
-})
-
-// Execute JavaScript
-mcp__chrome-devtools__evaluate_script({
-  function: "() => { return document.title; }"
-})
-
-// Close page
-mcp__chrome-devtools__close_page({
-  pageIdx: 0
-})
-```
-
-## Example Verification Session
-
-### Scenario: Created new Battle page
-
-```typescript
-// 1. Start dev server first
-// cd frontend && npm run dev
-
-// 2. Navigate to new page
-mcp__chrome-devtools__navigate_page({
-  url: "http://localhost:3000/battle"
-})
-
-// 3. Check page structure
-mcp__chrome-devtools__take_snapshot()
-
-// Expected output:
-// - Instruction input field visible
-// - Submit button visible
-// - Side-by-side viewer containers
-// - Navigation working
-
-// 4. Check console (no errors)
-mcp__chrome-devtools__list_console_messages()
-
-// 5. Test interaction: Fill instruction
-// First take snapshot to get uid
-mcp__chrome-devtools__take_snapshot()
-// Look for input uid in output
-
-mcp__chrome-devtools__fill({
-  uid: "5",  // Example uid from snapshot
-  value: "Pick up the red cube"
-})
-
-// 6. Click submit button
-mcp__chrome-devtools__click({
-  uid: "7"  // Submit button uid
-})
-
-// 7. Verify loading state appears
-mcp__chrome-devtools__wait_for({
-  text: "Executing",
-  timeout: 5000
-})
-
-// 8. Take screenshot for reference
-mcp__chrome-devtools__take_screenshot({
-  filePath: "screenshots/battle-executing.png"
-})
-
-// 9. Test responsive (optional)
-mcp__chrome-devtools__resize_page({
-  width: 375,
-  height: 812
-})
-
-mcp__chrome-devtools__take_snapshot()
-// Verify mobile layout works
-
-// 10. Close
-mcp__chrome-devtools__close_page({
-  pageIdx: 0
-})
-```
+### Technical Checks
+- [ ] No console errors (F12 → Console)
+- [ ] No console warnings (check)
+- [ ] No network errors (F12 → Network)
+- [ ] Loading states work correctly
 
 ## Common UI Issues to Check
 
 ### 1. Layout Broken
-
 **Symptoms:**
 - Elements overlapping
 - Misaligned components
-- Overflow scrollbars
+- Unexpected scrollbars
 
-**How to detect:**
-```typescript
-mcp__chrome-devtools__take_snapshot()
-// Look for missing elements or incorrect structure
-
-mcp__chrome-devtools__take_screenshot({
-  filePath: "screenshots/layout-check.png"
-})
-// Visual inspection
-```
+**How to check:**
+- Visual inspection
+- Resize browser window
+- Check on different screen sizes
 
 ### 2. Components Not Rendering
-
 **Symptoms:**
-- Blank page
+- Blank page or sections
 - Missing elements
 - Loading forever
 
-**How to detect:**
-```typescript
-mcp__chrome-devtools__list_console_messages()
-// Look for:
-// - React errors
-// - Failed fetch requests
-// - Missing component imports
-```
+**How to check:**
+- Check browser console for errors
+- Look for React/component errors
+- Check network tab for failed requests
 
 ### 3. Interactive Elements Broken
-
 **Symptoms:**
 - Buttons don't respond
 - Forms don't submit
 - Links don't navigate
 
-**How to detect:**
-```typescript
-// Take snapshot to get element uid
-mcp__chrome-devtools__take_snapshot()
-
-// Try clicking
-mcp__chrome-devtools__click({
-  uid: "10"  // Button uid
-})
-
-// Check if action happened
-mcp__chrome-devtools__take_snapshot()
-```
+**How to check:**
+- Click all interactive elements
+- Fill and submit forms
+- Test keyboard navigation (Tab key)
 
 ### 4. Console Errors
-
 **Common errors:**
 - "Cannot read property of undefined"
 - "Module not found"
 - "Failed to fetch"
-- "Hydration mismatch"
+- "Hydration mismatch" (Next.js)
 
-**How to detect:**
-```typescript
-mcp__chrome-devtools__list_console_messages()
-```
+**How to check:**
+- Open browser DevTools (F12)
+- Check Console tab
+- Fix all errors before committing
 
 ## Quick Workflow
 
@@ -293,43 +129,68 @@ mcp__chrome-devtools__list_console_messages()
 cd frontend
 npm run dev
 
-# 3. Use Chrome DevTools MCP to verify
-# - Navigate to page
-# - Take snapshot
-# - Check console
+# 3. Open in browser
+# http://localhost:3000/your-page
+
+# 4. Verify
+# - Check visual appearance
 # - Test interactions
+# - Check console (F12)
+# - Test responsive (resize)
 
-# 4. Pass? → Commit
+# 5. Run through checklist
+# Complete all items above
+
+# 6. Pass? → Commit
 git add .
-git commit -m "feat: add battle page UI"
+git commit -m "feat: add feature UI"
 
-# 5. Fail? → Fix and repeat
+# 7. Fail? → Fix and repeat
 ```
+
+## Testing Tools
+
+### Browser DevTools (F12)
+- **Console**: Check for errors/warnings
+- **Network**: Check API calls
+- **Elements**: Inspect DOM/styles
+- **Application**: Check localStorage/cookies
+
+### Chrome DevTools MCP (Optional)
+If available, use MCP tools for automated testing:
+- `mcp__chrome-devtools__navigate_page` - Open page
+- `mcp__chrome-devtools__take_snapshot` - Get page structure
+- `mcp__chrome-devtools__list_console_messages` - Check errors
+- `mcp__chrome-devtools__take_screenshot` - Capture visuals
+
+See MCP tool descriptions for detailed usage.
 
 ## Common Mistakes
 
 | Mistake | Fix |
 |---------|-----|
-| Skipping UI verification | ALWAYS use Chrome DevTools MCP |
-| Not checking console | Check for errors |
+| Skipping UI verification | ALWAYS verify visually |
+| Not checking console | Check for errors (F12) |
 | Not testing interactions | Click buttons, test forms |
-| Not checking mobile | Resize viewport |
-| Committing broken UI | Verify before commit |
+| Not checking mobile | Resize browser window |
+| Committing broken UI | Complete checklist first |
+| Not testing edge cases | Test empty states, errors |
 
 ## Quick Reference
 
-```typescript
-// Essential verification flow
-1. mcp__chrome-devtools__navigate_page({ url: "..." })
-2. mcp__chrome-devtools__take_snapshot()
-3. mcp__chrome-devtools__list_console_messages()
-4. mcp__chrome-devtools__take_screenshot({ filePath: "..." })
+```bash
+# Verification steps
+1. Start: npm run dev
+2. Open: http://localhost:3000/your-page
+3. Check: Visual, interactions, console, responsive
+4. Verify: Complete checklist above
+5. Commit: Only if all checks pass
 
-// Checklist
-[ ] Page loads ✅
-[ ] Components render ✅
+# Essential checks
+[ ] Visual appearance ✅
+[ ] Interactive elements ✅
 [ ] No console errors ✅
-[ ] Interactions work ✅
+[ ] Responsive layout ✅
 ```
 
 ---

@@ -336,164 +336,25 @@ export function useFeature() {
 
 ## Advanced Patterns
 
-### 1. Server Actions (Optional Alternative)
+### Server Actions (Alternative to router.refresh)
+Use Next.js Server Actions with `revalidatePath()` instead of `router.refresh()`:
+- **Pros:** Simpler, automatic revalidation
+- **Cons:** Server Actions only, can't call from regular functions
 
-Instead of `service.ts` + `router.refresh()`, you can use Server Actions:
+### Component Splitting
+Split large client components into smaller pieces for better performance and testability.
 
-```typescript
-// actions.ts
-"use server"
+### State Management
+For complex features with multiple client components:
+- Use shared context or state management library
+- Expose `refresh()` function from hooks when needed
+- Use `useMemo()` for expensive filtering/sorting
 
-import { revalidatePath } from "next/cache"
-import { createFeature as _createFeature } from "./service"
-
-export async function createFeatureAction(data: FeatureFormData) {
-  const result = await _createFeature(data)
-  revalidatePath("/features")  // Instead of router.refresh()
-  return result
-}
-```
-
-```typescript
-// use-feature.ts
-"use client"
-
-import { createFeatureAction } from "./actions"
-
-export function useFeature() {
-  const [isPending, startTransition] = useTransition()
-
-  const create = async (data: FeatureFormData) => {
-    startTransition(async () => {
-      await createFeatureAction(data)
-      // NO router.refresh() needed!
-    })
-  }
-
-  return { create, isPending }
-}
-```
-
-**Trade-offs:**
-- ✅ Simpler (no `router.refresh()`)
-- ✅ Automatic revalidation
-- ❌ Server Actions only (can't call from regular functions)
-
-### 2. Component Splitting
-
-Split large client components into smaller pieces:
-
-```
-feature/
-├── feature-client.tsx       # State management + layout
-├── feature-table.tsx        # Presentation only (no state)
-└── feature-modal.tsx        # Modal component
-```
-
-```typescript
-// feature-client.tsx
-"use client"
-export default function FeatureClient({ features }: Props) {
-  const [filter, setFilter] = useState("")
-
-  return (
-    <>
-      <input value={filter} onChange={e => setFilter(e.target.value)} />
-      <FeatureTable features={features.filter(f => f.name.includes(filter))} />
-    </>
-  )
-}
-
-// feature-table.tsx - Pure presentation
-"use client"
-export default function FeatureTable({ features }: Props) {
-  return (
-    <Table>
-      {features.map(f => <TableRow key={f.id}>{f.name}</TableRow>)}
-    </Table>
-  )
-}
-```
-
-**Benefits:**
-- Easier to test
-- Better performance (smaller re-renders)
-- Cleaner code organization
-
-### 3. Tabs Pattern
-
-```typescript
-// feature-client.tsx
-"use client"
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useMemo } from "react"
-
-export default function FeatureClient({ features }: Props) {
-  const [activeTab, setActiveTab] = useState("active")
-
-  const filteredFeatures = useMemo(() => {
-    return features.filter(f => f.status === activeTab)
-  }, [features, activeTab])
-
-  return (
-    <Tabs value={activeTab} onValueChange={setActiveTab}>
-      <TabsList>
-        <TabsTrigger value="active">Active</TabsTrigger>
-        <TabsTrigger value="archived">Archived</TabsTrigger>
-      </TabsList>
-      <TabsContent value={activeTab}>
-        <FeatureTable features={filteredFeatures} />
-      </TabsContent>
-    </Tabs>
-  )
-}
-```
-
-### 4. Expose Refresh Function
-
-```typescript
-// use-feature.ts
-export function useFeature() {
-  const router = useRouter()
-
-  const refresh = () => {
-    router.refresh()  // Expose for external use
-  }
-
-  return { create, delete, refresh }
-}
-
-// feature-client.tsx
-export default function FeatureClient() {
-  const { refresh } = useFeature()
-
-  return (
-    <Modal onSuccess={refresh}>  {/* Pass to child */}
-      {/* Modal calls refresh() on success */}
-    </Modal>
-  )
-}
-```
-
-### 5. Empty State in Table
-
-```typescript
-<Table>
-  <TableHeader>...</TableHeader>
-  <TableBody>
-    {features.length === 0 ? (
-      <TableRow>
-        <TableCell colSpan={5} className="text-center text-muted-foreground">
-          No features yet.
-        </TableCell>
-      </TableRow>
-    ) : (
-      features.map(feature => <TableRow key={feature.id}>...</TableRow>)
-    )}
-  </TableBody>
-</Table>
-```
+### Common Patterns
+- **Tabs**: Use shadcn/ui Tabs component with filtered data
+- **Empty States**: Show helpful messages when data is empty
+- **Loading States**: Display during `isPending`
+- **Error Boundaries**: Wrap client components for error handling
 
 ---
 
