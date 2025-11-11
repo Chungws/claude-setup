@@ -21,14 +21,14 @@ description: Python dependency management using uv (NOT pip). Use when adding/re
 
 ## 📦 Workspace Structure
 
-**Use uv workspace with centralized dev dependencies:**
+**Typical uv workspace with centralized dev dependencies:**
 
 ```
-project root/
+project-root/
 ├── pyproject.toml          # Root: Dev dependencies ONLY
-├── backend/pyproject.toml  # Production dependencies only
-├── worker/pyproject.toml   # Production dependencies only
-└── shared/pyproject.toml   # Production dependencies only
+├── package-a/pyproject.toml  # Production dependencies
+├── package-b/pyproject.toml  # Production dependencies
+└── shared/pyproject.toml     # Production dependencies
 ```
 
 **Key Rules:**
@@ -43,7 +43,7 @@ project root/
 
 ```bash
 # Navigate to the sub-package
-cd backend  # or worker, or shared
+cd package-a  # or any sub-package
 
 # ✅ CORRECT: Add to sub-package
 uv add httpx
@@ -62,7 +62,7 @@ echo "httpx" >> pyproject.toml       # direct edit forbidden!
 
 ```bash
 # Navigate to project root
-cd project root
+cd project-root
 
 # ✅ CORRECT: Add dev deps to root with --dev flag
 uv add pytest --dev
@@ -70,8 +70,8 @@ uv add ruff --dev
 uv add pytest-asyncio --dev
 
 # ❌ WRONG: Never add dev deps to sub-packages
-cd backend && uv add pytest --dev   # WRONG location!
-cd worker && uv add ruff --dev      # WRONG location!
+cd package-a && uv add pytest --dev   # WRONG location!
+cd package-b && uv add ruff --dev     # WRONG location!
 ```
 
 **Why?**
@@ -108,25 +108,23 @@ pip uninstall httpx                  # pip forbidden!
 
 ### With uv run (Project Commands)
 
-**In a Workspace, ALWAYS run from project root:**
+**In a Workspace, run from project root:**
 
 ```bash
-# ✅ CORRECT: Run from root using --directory flag
-cd project root  # Navigate to root first
+# ✅ CORRECT: Run from root
+cd project-root
 
 # Run tests (uses root dev dependencies)
-uv run --directory backend pytest -s
-uv run --directory worker pytest -s
+uv run pytest -s
 
-# Or use Makefile (recommended)
-make test          # Runs all tests
-make lint          # Runs all linters
+# Run specific package tests
+uv run --directory package-a pytest -s
 
-# Run backend server
-cd backend && uv run uvicorn vlaarena_backend.main:app --reload
+# Run application server
+cd package-a && uv run uvicorn app.main:app --reload
 
 # Run migrations
-cd backend && uv run alembic upgrade head
+cd package-a && uv run alembic upgrade head
 ```
 
 **Why from root?**
@@ -134,23 +132,19 @@ cd backend && uv run alembic upgrade head
 - Ensures consistent tool versions
 - Follows workspace best practices
 
-### With uvx (One-off Tools)
+### With uv run (Tools from Dev Dependencies)
 
 ```bash
-# ✅ CORRECT: Use uvx for standalone tools (from root)
-uvx ruff check                    # Lint all packages
-uvx ruff format                   # Format all packages
-uvx ruff check --fix              # Auto-fix issues (includes import sorting)
+# ✅ CORRECT: Use uv run for dev tools (from root)
+uv run ruff check                    # Lint all packages
+uv run ruff format                   # Format all packages
+uv run ruff check --fix              # Auto-fix issues (includes import sorting)
 
 # ❌ WRONG: Don't use isort
-uvx isort .                       # isort not needed (ruff does this)
+uv run isort .                       # isort not needed (ruff does this)
 ```
 
-**Difference:**
-- `uv run` → Uses project's dependencies
-- `uvx` → Runs tool in isolated environment (like `npx`)
-
-**Note:** When using ruff, isort is not needed. Ruff handles import sorting with the `I` rule.
+**Note:** Ruff handles import sorting with the `I` rule. isort is not needed.
 
 ## Syncing Dependencies
 
@@ -158,7 +152,7 @@ uvx isort .                       # isort not needed (ruff does this)
 
 ```bash
 # Clone repo, first time setup (from root)
-cd project root
+cd project-root
 uv sync --all-extras    # Syncs all workspace members + dev dependencies
 ```
 
@@ -166,7 +160,7 @@ uv sync --all-extras    # Syncs all workspace members + dev dependencies
 
 ```bash
 # Someone else added dependencies
-git pull origin develop
+git pull
 uv sync --all-extras    # Re-sync workspace
 ```
 
@@ -200,66 +194,66 @@ __pycache__/    # ❌ Don't commit!
 
 ## Common Workflows
 
-### Adding New Feature Dependency (Production)
+### Adding Production Dependency
 
 ```bash
 # 1. Navigate to sub-package
-cd backend  # or worker, or shared
+cd package-a
 
 # 2. Add package
 uv add httpx
 
 # 3. Return to root and verify
 cd ..
-make test
+uv run pytest -s
 
 # 4. Commit (from root)
-git add backend/pyproject.toml uv.lock
-git commit -m "chore: add httpx to backend for API calls"
+git add package-a/pyproject.toml uv.lock
+git commit -m "chore: add httpx for API calls"
 ```
 
-### Adding Test Dependency (Development)
+### Adding Development Dependency
 
 ```bash
 # 1. MUST be at root
-cd project root
+cd project-root
 
 # 2. Add with --dev to root
 uv add pytest-mock --dev
 
 # 3. Verify tests work
-make test
+uv run pytest -s
 
 # 4. Commit
 git add pyproject.toml uv.lock
 git commit -m "chore: add pytest-mock for testing"
 ```
 
-### Updating All Dependencies
+### Updating Dependencies
 
 ```bash
 # Update to latest compatible versions (from root)
-cd project root
+cd project-root
 uv sync --all-extras --upgrade
 
 # Test everything still works
-make test
+uv run pytest -s
 
 # Commit if successful
 git add uv.lock
 git commit -m "chore: update dependencies"
 ```
 
-## Pre-Commit Checklist
+## Dependency Checklist
 
 Before committing dependency changes:
 
 - [ ] Used `uv add` (NOT pip install)
 - [ ] Did NOT edit `pyproject.toml` directly
 - [ ] Added dev deps to ROOT only (not sub-packages)
-- [ ] Added prod deps to correct sub-package (backend/worker/shared)
+- [ ] Added prod deps to correct sub-package
 - [ ] Committed correct `pyproject.toml` and `uv.lock`
-- [ ] Ran `make test` from root to verify
+- [ ] Ran tests to verify: `uv run pytest -s`
 - [ ] Did NOT commit `.venv/` directory
 
 ## Common Mistakes
@@ -267,42 +261,42 @@ Before committing dependency changes:
 | Mistake | Fix |
 |---------|-----|
 | `pip install httpx` | Use `uv add httpx` |
-| `cd backend && uv add pytest --dev` | Dev deps ONLY in root! |
+| Dev deps in sub-package | Dev deps ONLY in root! |
 | Adding isort | Don't! Ruff handles import sorting |
 | Editing pyproject.toml | Use `uv add/remove` commands |
 | Forgetting uv.lock | `git add uv.lock` |
 | Committing .venv/ | Add to .gitignore |
-| `uv run pytest` from sub-package | Use `make test` from root |
+| Running pytest from sub-package | Run from root |
 
 ## Quick Reference
 
 ```bash
 # Production dependency → Sub-package
-cd backend && uv add <package>
+cd package-name && uv add <package>
 
 # Dev dependency → Root ONLY
-cd /path/to/root && uv add <package> --dev
+cd project-root && uv add <package> --dev
 
 # Remove dependency
 uv remove <package>
 
-# Sync workspace
-uv sync --all-extras                # from root
+# Sync workspace (from root)
+uv sync --all-extras                # install all
 uv sync --all-extras --locked       # exact versions
+uv sync --all-extras --upgrade      # update all
 
 # Run tests (from root)
-make test                           # all tests
-uv run --directory backend pytest   # backend only
-uv run --directory worker pytest    # worker only
+uv run pytest -s                    # all tests
+uv run --directory package-a pytest # specific package
 
 # Linting (from root)
-make lint                           # all linters
-uvx ruff check                      # check only
-uvx ruff check --fix                # auto-fix
+uv run ruff check                   # check only
+uv run ruff check --fix             # auto-fix
+uv run ruff format                  # format code
 
 # Commit
-git add pyproject.toml uv.lock      # root changes
-git add backend/pyproject.toml uv.lock  # backend changes
+git add pyproject.toml uv.lock                # root changes
+git add package-a/pyproject.toml uv.lock      # package changes
 ```
 
 ---

@@ -7,53 +7,38 @@ description: Run Python quality checks (ruff lint/format, pytest). Use before cr
 
 Run all Python quality checks before committing or creating PRs.
 
-## Quality Checks
+## Prerequisites
 
-### 1. Linting Check
+Ruff and pytest should be added as dev dependencies in root `pyproject.toml`:
 
 ```bash
-ruff check .
+cd project-root
+uv add ruff --dev
+uv add pytest --dev
 ```
 
-### 2. Formatting Check
+## Quality Checks
+
+Run from project root:
+
+### 1. Linting
 
 ```bash
-ruff format --check
+uv run ruff check
+```
+
+### 2. Formatting
+
+```bash
+uv run ruff format --check
 ```
 
 ### 3. Tests
 
 ```bash
-pytest
-# Or with uv:
-uv run pytest
-```
-
-## Report Format
-
-```markdown
-## Python Quality Check Results
-
-### ✅ Linting
-- Command: `ruff check .`
-- Status: PASSED
-- Errors: 0
-
-### ✅ Formatting
-- Command: `ruff format --check`
-- Status: PASSED
-
-### ✅ Tests
-- Command: `pytest`
-- Status: PASSED
-
-**Overall: ✅ ALL CHECKS PASSED - Ready for PR**
+uv run pytest -s
 ```
 
 ## If Checks Fail
 
-1. **Linting errors**: Fix with `ruff check . --fix`
-2. **Formatting errors**: Fix with `ruff format .`
-3. **Test failures**: Fix the failing tests
-
-Re-run checks after fixes.
+Use the `fixing-linting-errors` skill for detailed troubleshooting and fixes.
