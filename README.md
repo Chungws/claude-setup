@@ -58,6 +58,8 @@ Install via Claude Code plugin marketplace:
 /plugin install code-review@anthropics-claude-code
 /plugin install pr-review-toolkit@anthropics-claude-code
 /plugin install hookify@anthropics-claude-code
+/plugin install security-guidance@anthropics-claude-code
+/plugin install frontend-design@anthropics-claude-code
 ```
 
 | Plugin | Description |
@@ -67,6 +69,8 @@ Install via Claude Code plugin marketplace:
 | `code-review` | Multi-agent PR review (CLAUDE.md compliance + bug detection) |
 | `pr-review-toolkit` | 6 specialized review agents (silent-failure-hunter, type-design-analyzer, etc.) |
 | `hookify` | Create hooks conversationally (`/hookify` → describe what you want) |
+| `security-guidance` | Auto-warns on security issues (command injection, XSS, eval, pickle, os.system) |
+| `frontend-design` | Bold, production-grade frontend design guidance (auto-invoked for frontend work) |
 
 ### LSP Plugins (for terminal Claude Code users)
 
