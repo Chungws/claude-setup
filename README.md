@@ -44,17 +44,8 @@ cp ~/claude-setup/.mcp.json.example ~/.claude/.mcp.json
 | `backend/sqlmodel-patterns` | SQLModel database patterns |
 | `backend/alembic-migrations` | Database migration workflow |
 | `frontend/frontend-ui-testing` | UI testing patterns |
-| `git/git-committing` | Conventional commits guide |
-| `git/git-branching` | Branch strategy |
-| `git/creating-pull-requests` | PR creation workflow |
 | `git/pr-splitting-strategy` | Splitting large PRs |
-| `python/quality-check-python` | Ruff + pytest checks |
-| `python/fixing-linting-errors` | Lint error fixes |
-| `python/managing-python-deps` | Dependency management |
-| `python/python-monorepo-with-uv` | uv monorepo patterns |
-| `python/reviewing-python` | Python code review |
 | `testing/tdd-principles` | TDD Red-Green-Refactor |
-| `typescript/reviewing-typescript` | TypeScript code review |
 
 ## Recommended Plugins
 
