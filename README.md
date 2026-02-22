@@ -27,13 +27,14 @@ CLAUDE.md                    # Global coding principles
 # Clone
 git clone https://github.com/Chungws/claude-setup.git ~/claude-setup
 
-# Copy global config
-cp ~/claude-setup/CLAUDE.md ~/.claude/CLAUDE.md
+# Symlink global CLAUDE.md (updates auto-reflect from repo)
+ln -sf ~/claude-setup/CLAUDE.md ~/.claude/CLAUDE.md
 
-# Copy MCP config
+# Copy MCP config (edit locally as needed)
 cp ~/claude-setup/.mcp.json.example ~/.claude/.mcp.json
 
-# Symlink skills into projects as needed
+# Symlink all skills globally
+ln -sf ~/claude-setup/.claude/skills/* ~/.claude/skills/
 ```
 
 ## Skills
