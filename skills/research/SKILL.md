@@ -9,6 +9,47 @@ user-invocable: true
 
 # Research Orchestrator
 
+## Preamble (먼저 실행)
+
+```bash
+TOPIC_SLUG=$(echo "$ARGUMENTS" | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
+SESSION_DATE=$(date +%Y-%m-%d)
+SESSION_TIME=$(date +%H%M%S)
+LOG_DIR=~/dapi-ssot/SOT/session-logs
+LOG_FILE="$LOG_DIR/${SESSION_DATE}-research-${TOPIC_SLUG}.md"
+mkdir -p "$LOG_DIR"
+cat > "$LOG_FILE" << LOGEOF
+---
+created: ${SESSION_DATE}
+skill: research
+topic: ${ARGUMENTS}
+status: in-progress
+---
+
+# Research Session: ${ARGUMENTS}
+
+## 메타
+- 시작: ${SESSION_DATE} ${SESSION_TIME}
+- 키워드: (Phase 1에서 채울 것)
+- 종료: (완료 시 채울 것)
+
+## 수집 결과
+- 논문: 0편
+- 레포: 0개
+- 아티클: 0편
+
+## 생성된 파일
+(목록)
+
+## 오류/메모
+(있으면 기록)
+LOGEOF
+echo "SESSION_LOG=$LOG_FILE"
+echo "TOPIC_SLUG=$TOPIC_SLUG"
+```
+
+위 bash 출력의 `SESSION_LOG` 경로를 기억하고, 각 Phase 완료 시 해당 파일을 업데이트한다.
+
 ## Trigger
 사용자가 `/research {토픽}` 또는 자연어로 리서치를 요청할 때 활성화.
 
