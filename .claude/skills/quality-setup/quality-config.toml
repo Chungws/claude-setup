@@ -1,0 +1,98 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    # 기본
+    "E", "W",       # pycodestyle
+    "F",            # Pyflakes
+    "I",            # isort
+    "N",            # pep8-naming
+
+    # 코드 품질
+    "B",            # flake8-bugbear
+    "SIM",          # flake8-simplify
+    "C4",           # flake8-comprehensions
+    "UP",           # pyupgrade
+    "FURB",         # refurb
+    "PERF",         # Perflint
+    "C90",          # mccabe
+    "PIE",          # flake8-pie
+
+    # 타입
+    "ANN",          # flake8-annotations
+
+    # 보안
+    "S",            # flake8-bandit
+    "BLE",          # flake8-blind-except
+
+    # 에러 처리/return
+    "RET",          # flake8-return
+    "TRY",          # tryceratops
+    "RSE",          # flake8-raise
+
+    # import
+    "TID",          # flake8-tidy-imports
+
+    # 디버깅/정리
+    "T20",          # flake8-print
+    "T10",          # flake8-debugger
+    "ERA",          # eradicate
+
+    # 테스트
+    "PT",           # flake8-pytest-style
+    "ARG",          # flake8-unused-arguments
+
+    # 라이브러리
+    "PD",           # pandas-vet
+    "NPY",          # NumPy
+    "ASYNC",        # flake8-async
+
+    # 기타
+    "PL",           # pylint
+    "RUF",          # ruff 자체
+    "FLY",          # flynt
+    "PTH",          # flake8-use-pathlib
+    "A",            # flake8-builtins
+    "ISC",          # implicit-str-concat
+    "DTZ",          # flake8-datetimez
+    "LOG",          # flake8-logging
+    "G",            # flake8-logging-format
+    "SLF",          # flake8-self
+    "PGH",          # pygrep-hooks
+]
+
+ignore = [
+    "E501",         # 줄 길이 (ruff format이 처리)
+    "ANN101",       # self 타입
+    "ANN102",       # cls 타입
+    "TRY003",       # 긴 에러 메시지
+]
+
+fixable = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+strict = true
+warn_unused_configs = true
+show_error_codes = true
+pretty = true
+enable_error_code = [
+    "ignore-without-code",  # type: ignore에 코드 명시 강제
+    "redundant-expr",       # 항상 True/False인 조건 감지
+    "truthy-bool",          # bool 아닌 값의 truthy 체크 경고
+]
+disallow_any_explicit = true
+disallow_any_unimported = true
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: Integration tests (Layer 3)",
+    "slow: Slow tests",
+]
+addopts = "-m 'not integration and not slow' --strict-markers --cov --cov-report=term-missing --cov-fail-under=100"
+testpaths = ["tests"]
