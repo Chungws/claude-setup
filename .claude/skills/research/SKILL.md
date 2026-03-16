@@ -116,6 +116,7 @@ echo "TOPIC_SLUG=$TOPIC_SLUG"
 created: {date}
 topic: {topic}
 tags: [research, {topic-tags}]
+related: []
 status: done
 papers_count: N
 repos_count: N
