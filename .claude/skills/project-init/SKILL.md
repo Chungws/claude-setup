@@ -64,6 +64,9 @@ After approval, generate into `<project-dir>`:
 - Dependency rules summary
 - Lint & test commands (language-appropriate)
 
+### Quality Setup (Python projects)
+- Python 프로젝트인 경우, `/quality-setup` 실행을 안내하여 ruff + mypy + pytest 설정 적용을 제안한다
+
 ## Step 5: Summary
 
 Show the user:

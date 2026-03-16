@@ -1,8 +1,8 @@
 # Quality Checks
 
 Before committing, always run:
-- **Lint**: `ruff check` (Python) or equivalent linter
-- **Format**: `ruff format --check` (Python) or equivalent formatter
-- **Tests**: `pytest` / `jest` / relevant test runner
+- **Lint**: `ruff check --fix` → `ruff format`
+- **Type check**: `mypy .`
+- **Tests**: `pytest` (Layer 1+2, with coverage)
 
-Do not commit code with lint errors or failing tests.
+Do not commit code with lint errors, type errors, or failing tests.
