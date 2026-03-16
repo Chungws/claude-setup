@@ -1,9 +1,18 @@
+---
+name: save
+description: >
+  URL을 받아 Obsidian vault(~/dapi-ssot)에 구조화된 노트로 저장한다.
+  타입(논문/레포/아티클)을 자동 판별하고 기존 리서치와 연결한다.
+  "저장해줘", "북마크", "vault에 넣어줘" 등의 요청 시 활성화.
+user-invocable: true
+---
+
 # Save to Vault
 
 URL을 받아 Obsidian vault에 구조화된 노트로 저장한다.
 
 ## Input
-- url: 저장할 URL (필수)
+- url: 저장할 URL (필수, `$ARGUMENTS`에서 추출)
 - tags: 추가 태그 (optional)
 
 ## Process

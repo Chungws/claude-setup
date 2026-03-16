@@ -51,8 +51,7 @@ echo "TOPIC_SLUG=$TOPIC_SLUG"
 위 bash 출력의 `SESSION_LOG` 경로를 기억하고, 각 Phase 완료 시 해당 파일을 업데이트한다.
 
 ## Trigger
-- `/research {토픽}` 또는 자연어로 리서치를 요청할 때 → 아래 Phase 1~4 실행
-- URL을 저장해달라는 요청 ("이거 저장해줘", "이 링크 vault에 넣어줘" 등) → `~/.claude/skills/research/save.md`를 읽고 따르라
+사용자가 `/research {토픽}` 또는 자연어로 리서치를 요청할 때 활성화.
 
 ## Input
 - topic: 리서치 주제 (필수, `$ARGUMENTS`에서 추출)
