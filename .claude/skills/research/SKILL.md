@@ -156,6 +156,11 @@ articles_count: N
 4. [[{파일명}]] — 이유
 5. ...나머지는 관심 영역에 따라
 
+## 인사이트 노트
+- [[{insight-slug}]] — 한줄 설명
+- [[{insight-slug}]] — 한줄 설명
+(Phase 3-3에서 생성한 인사이트 노트를 여기에 링크)
+
 ## 딥다이브 추천
 이 리서치에서 더 파고 싶은 방향. 복붙해서 바로 실행 가능한 형태로.
 
@@ -181,6 +186,7 @@ articles_count: N
 created: {date}
 tags: [insight, {topic-tags}]
 source_notes: [[{출처1}]], [[{출처2}]]
+related: [[topics/{topic-slug}]]
 status: done
 ---
 
@@ -189,6 +195,7 @@ status: done
 {자기 말로 재해석한 내용 — 3~5문장}
 
 ## 연결
+- [[topics/{topic-slug}]] — 허브 노트
 - [[{다른-insight}]] — 연관성 한줄 설명
 - 출처: [[{논문/아티클 파일명}]], [[{논문/아티클 파일명}]]
 ```
