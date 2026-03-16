@@ -61,30 +61,54 @@ echo "TOPIC_SLUG=$TOPIC_SLUG"
 ## Vault 경로
 모든 결과물은 `~/dapi-ssot/`에 저장한다.
 
+## Vault 규칙 (서브에이전트에도 반드시 전달)
+- 한국어로 작성
+- 본문에서 다른 노트를 언급할 때 반드시 `[[위키링크]]` 사용 (frontmatter만이 아니라 본문에도)
+- 노트 마지막에 `## 연결` 섹션 추가: 관련 노트 `[[위키링크]]`와 한줄 설명
+- 프론트매터에 tags, related, status 필수
+
 ## Phase 1: Scoping
 1. `$ARGUMENTS`에서 토픽, 범위 추출
 2. `~/dapi-ssot/research/topics/`에서 기존 관련 리서치 확인 (Grep)
 3. 검색 키워드 3~5개 도출
 4. 기존 vault 노트와의 연결점 파악
 5. 리서치 계획을 사용자에게 보여주고 확인 받기
+6. **SESSION_LOG 업데이트**: 키워드 필드를 채운다
 
 ## Phase 2: Parallel Collection
 확인 후 3개 서브에이전트를 Agent tool로 병렬 스폰한다.
-각 서브에이전트의 프롬프트에 다음을 포함:
+각 서브에이전트의 프롬프트에 **반드시** 다음을 모두 포함:
 
-- **paper-scout**: "Read ~/.claude/skills/research/paper-scout.md를 읽고 지시를 따르라. 키워드: {keywords}, 토픽: {topic}"
-- **repo-analyst**: "Read ~/.claude/skills/research/repo-analyst.md를 읽고 지시를 따르라. 키워드: {keywords}, 토픽: {topic}"
-- **article-crawler**: "Read ~/.claude/skills/research/article-crawler.md를 읽고 지시를 따르라. 키워드: {keywords}, 토픽: {topic}"
+```
+너는 리서치 서브에이전트다.
+1. Read ~/.claude/skills/research/{agent-file}.md 를 읽고 지시를 따르라.
+2. 키워드: {keywords}
+3. 토픽: {topic}
+4. 토픽 슬러그: {topic-slug}
+
+## 필수 규칙 (모든 노트에 적용):
+- 한국어로 작성
+- 본문에서 다른 노트를 언급할 때 반드시 [[위키링크]] 사용
+- 노트 마지막에 "## 연결" 섹션 추가: [[topics/{topic-slug}]] 허브 노트 링크 + 관련 노트 링크
+- 프론트매터에 tags, related, status 필수
+- 작업 완료 후 생성한 파일 경로 목록을 반환하라
+```
 
 3개를 동시에 스폰하고 결과를 기다린다.
 
 ## Phase 3: Synthesis
 서브에이전트 결과 수합 후:
-1. 생성된 파일들을 전부 읽기
-2. 중복 및 관련도 낮은 항목 제거
-3. 핵심 인사이트 3~5개 도출
-4. `~/dapi-ssot/projects/` 내 진행중인 프로젝트와 연관성 분석
-5. 허브 노트 생성: `~/dapi-ssot/research/topics/{topic-slug}.md`
+
+### 3-1. 결과 확인
+1. `~/dapi-ssot/research/papers/`, `repos/`, `articles/`에서 이번 세션에서 생성된 파일들을 Glob으로 찾기
+2. 각 파일을 읽고 내용 확인
+3. 중복 및 관련도 낮은 항목 제거 (파일 삭제)
+
+### 3-2. 허브 노트 생성
+`~/dapi-ssot/research/topics/{topic-slug}.md` 생성:
+- 수집된 모든 노트의 **실제 파일명**으로 `[[위키링크]]` 작성 (플레이스홀더 금지)
+- 핵심 인사이트 3~5개 도출
+- `~/dapi-ssot/projects/` 내 진행중인 프로젝트와 연관성 분석
 
 ### Hub Note Template
 ```
@@ -106,26 +130,55 @@ articles_count: N
 3. ...
 
 ## 논문
-- [[paper-1]] - 한줄 요약
-- [[paper-2]] - 한줄 요약
+- [[{실제-파일명}]] - 한줄 요약
+- [[{실제-파일명}]] - 한줄 요약
 
 ## GitHub 프로젝트
-- [[repo-1]] - 한줄 설명
+- [[{실제-파일명}]] - 한줄 설명
 
 ## 아티클
-- [[article-1]] - 한줄 요약
+- [[{실제-파일명}]] - 한줄 요약
 
 ## 관련 프로젝트
-- [[projects/my-project]] - 연관성 설명
+- [[projects/{project}]] - 연관성 설명
 
 ## 추가 탐색 방향
 - ...
 ```
 
+### 3-3. Insight 노트 생성 (depth: deep일 때)
+핵심 인사이트 3~5개를 각각 atomic note로 작성:
+- 파일: `~/dapi-ssot/research/insights/{short-slug}.md`
+- 하나의 노트 = 하나의 아이디어
+- 자기 말로 재해석 (원문 복붙 금지)
+- 본문에 출처 `[[위키링크]]` + 다른 insight `[[위키링크]]` 포함
+- `## 연결` 섹션 필수
+
+### Insight Note Template
+```
+---
+created: {date}
+tags: [insight, {topic-tags}]
+source_notes: [[{출처1}]], [[{출처2}]]
+status: done
+---
+
+# {아이디어 제목}
+
+{자기 말로 재해석한 내용 — 3~5문장}
+
+## 연결
+- [[{다른-insight}]] — 연관성 한줄 설명
+- 출처: [[{논문/아티클 파일명}]], [[{논문/아티클 파일명}]]
+```
+
 ## Phase 4: Logging
-세션 로그를 `~/dapi-ssot/SOT/session-logs/YYYY-MM-DD-research-{topic-slug}.md`에 기록:
-- 검색 키워드, 수집 결과 수, 소요 시간
-- 생성/수정한 파일 목록
+SESSION_LOG 파일을 **최종 업데이트**:
+1. status를 `done`으로 변경
+2. 종료 시간 기록
+3. 수집 결과 수치 업데이트 (논문 N편, 레포 N개, 아티클 N편)
+4. 생성된 파일 **전체 경로 목록** 나열 (허브 노트, insight 포함)
+5. 오류/메모에 실패한 검색, 접근 불가 URL 등 기록
 
 ## 실패 처리
 - 검색 결과 0건 → 키워드를 동의어/상위 개념으로 확장하여 재시도

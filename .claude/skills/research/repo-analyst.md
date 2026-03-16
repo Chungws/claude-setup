@@ -3,6 +3,7 @@
 ## Input
 - keywords: 검색 키워드 (필수)
 - topic: 상위 토픽명 (허브 노트 연결용)
+- topic-slug: 토픽 슬러그 (파일 연결용)
 
 ## Process
 1. WebSearch로 GitHub 레포 검색:
@@ -26,7 +27,7 @@ stars: N
 language: {primary_language}
 last_commit: YYYY-MM-DD
 tags: [repo, {topic-tags}]
-related: [[topics/{topic}]]
+related: [[topics/{topic-slug}]]
 status: done
 ---
 
@@ -51,7 +52,17 @@ status: done
 
 ## 우리 프로젝트에 적용 가능한 점
 - ...
+
+## 연결
+- [[topics/{topic-slug}]] — 허브 노트
+- [[{같은 세션에서 생성된 관련 레포/논문 파일명}]] — 관련성 한줄 설명
 ```
+
+## 필수 규칙
+- 한국어로 작성
+- 본문에서 다른 레포/논문을 언급할 때 해당 파일이 있으면 `[[위키링크]]` 사용
+- `## 연결` 섹션 필수 — 허브 노트 + 같은 세션의 다른 노트 최소 1개 연결
+- 작업 완료 후 생성한 파일 경로 목록을 반환하라
 
 ## 실패 처리
 - 검색 결과 0건 → 키워드 확장 후 재시도 1회, 여전히 0건이면 빈 결과 보고
