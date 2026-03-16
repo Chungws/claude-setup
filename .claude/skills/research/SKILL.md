@@ -12,7 +12,7 @@ user-invocable: true
 ## Preamble (먼저 실행)
 
 ```bash
-TOPIC_SLUG=$(echo "$ARGUMENTS" | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
+TOPIC_SLUG=$(echo "$ARGUMENTS" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9 ]/ /g' | tr -s ' ' '\n' | grep -vxE 'for|the|a|an|of|in|on|with|and|or|to|is|are|by|at' | head -4 | tr '\n' '-' | sed 's/-$//')
 SESSION_DATE=$(date +%Y-%m-%d)
 SESSION_TIME=$(date +%H%M%S)
 LOG_DIR=~/dapi-ssot/SOT/session-logs
