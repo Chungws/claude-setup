@@ -65,8 +65,6 @@ select = [
 
 ignore = [
     "E501",         # 줄 길이 (ruff format이 처리)
-    "ANN101",       # self 타입
-    "ANN102",       # cls 타입
     "TRY003",       # 긴 에러 메시지
 ]
 
