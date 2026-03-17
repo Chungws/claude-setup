@@ -19,6 +19,14 @@
 - Mark with `@integration` / `@slow` tags for CI/CD separation.
 - Run on dedicated pipeline, not on every commit.
 
+## Plan → Test First
+
+Plan mode 완료 후, 구현 전에 수용 기준을 Red 테스트로 먼저 작성한다.
+- Plan의 각 단계에서 검증 가능한 행동을 추출 → pytest 테스트로 변환
+- 모든 테스트가 Red(실패) 상태인지 확인한 뒤 구현 시작
+- 이것이 "사전 명세"의 역할을 한다 — 리뷰 대신 테스트가 수용 기준을 강제
+- 이후 Red → Green → Refactor 사이클로 구현 (→ `testing/tdd-principles` 참조)
+
 ## Coverage
 
 - Target **100% line coverage** for new code.
