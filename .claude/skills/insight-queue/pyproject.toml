@@ -1,0 +1,18 @@
+[project]
+name = "insight-queue"
+version = "0.1.0"
+description = "Track which session logs need insight analysis"
+requires-python = ">=3.12"
+
+[project.scripts]
+insight-pending = "insight_queue.cli:cmd_pending_main"
+insight-done = "insight_queue.cli:cmd_done_main"
+insight-reset = "insight_queue.cli:cmd_reset_main"
+insight-list = "insight_queue.cli:cmd_list_main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/insight_queue"]
