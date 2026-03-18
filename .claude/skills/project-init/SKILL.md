@@ -67,6 +67,12 @@ After approval, generate into `<project-dir>`:
 ### Quality Setup (Python projects)
 - Python 프로젝트인 경우, `/quality-setup` 실행을 안내하여 ruff + mypy + pytest 설정 적용을 제안한다
 
+### PLAN.md (2계층 플랜 구조)
+- `PLAN.md`를 프로젝트 루트에 생성
+- **상위 플랜**: 아키텍처, 핵심 결정, Phase 로드맵 (각 Phase가 뭘 하는지 1~2줄)
+- **Phase별 구체 플랜**: 각 Phase 시작 시 plan mode에서 작성. 파일 목록, 테스트 전략, 구현 순서 등 구체적 내용은 여기에.
+- PLAN.md에 구현 세부사항을 넣지 마라 — 설계 논의 중 자주 바뀌어서 유지보수 비용만 높아진다
+
 ## Step 5: Summary
 
 Show the user:
