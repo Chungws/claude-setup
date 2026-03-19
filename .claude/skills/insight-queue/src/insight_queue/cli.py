@@ -113,7 +113,7 @@ def cmd_pending_main() -> None:
         size_kb = jsonl.stat().st_size // 1024
         print(f"  - {session_id[:8]} | {project} | {mtime} | {size_kb}KB")
     print()
-    print("인사이트 분석을 진행하려면 '인사이트 분석해줘'라고 요청하세요.")
+    print("→ '인사이트 분석해줘' 또는 '/lessons'로 분석을 시작하세요.")
 
 
 def cmd_done_main() -> None:
