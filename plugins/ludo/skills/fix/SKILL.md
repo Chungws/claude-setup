@@ -22,7 +22,7 @@ $ARGUMENTS는 다음 중 하나:
 
 | 입력 형태 | 예시 | 동작 |
 |-----------|------|------|
-| Issue URL | `https://github.com/owner/repo/issues/42` | git-platform 스킬로 issue 내용 fetch → 수정 지시로 사용 |
+| Issue URL | `https://github.com/owner/repo/issues/42` | issue 내용 fetch → 수정 지시로 사용 |
 | Issue 번호 | `#42`, `42` | 현재 repo의 issue를 fetch → 수정 지시로 사용 |
 | 자연어 | `config 파서에서 NPE 수정` | 기존 동작 그대로 |
 | 없음 | (빈 인자) | 물어본다 |
@@ -35,15 +35,8 @@ $ARGUMENTS는 다음 중 하나:
 
 ### Issue 모드
 
-1. git-platform 스킬 절차에 따라 플랫폼 판별 (`git remote get-url origin`)
-2. issue 내용 fetch:
-   ```bash
-   # GitHub
-   gh issue view {number} --repo {owner}/{repo}
-   # GitLab
-   glab issue view {number} --repo {owner}/{repo}
-   ```
-3. fetch한 issue 내용을 수정 지시로 사용
+1. issue 내용을 fetch한다 (MCP 도구 또는 CLI 중 사용 가능한 것 사용)
+2. fetch한 issue 내용을 수정 지시로 사용
 4. issue 내용이 모호하거나 정보 부족 시:
    ```
    issue 내용이 불충분합니다. issue #{number}에 수정 대상과 기대 동작이 명확하지 않습니다.
@@ -133,26 +126,7 @@ Gate PASS 후 ISSUE_NUMBER가 있으면:
    ```bash
    git push -u origin $(git branch --show-current)
    ```
-2. git-platform 스킬로 PR/MR 생성:
-   ```bash
-   # GitHub
-   gh pr create \
-     --title "fix: {수정 요약}" \
-     --body "## Summary
-   {수정 내용 요약}
-
-   closes #{ISSUE_NUMBER}" \
-     --head $(git branch --show-current)
-
-   # GitLab
-   glab mr create \
-     --title "fix: {수정 요약}" \
-     --description "## Summary
-   {수정 내용 요약}
-
-   closes #{ISSUE_NUMBER}" \
-     --source-branch $(git branch --show-current)
-   ```
+2. PR/MR 생성 (제목 `fix: {수정 요약}`, `closes #{ISSUE_NUMBER}` 포함)
 
 **실패 시** (gate 3회 실패 등 파이프라인 중단): PR/MR을 생성하지 않는다. 실패 보고만 한다.
 

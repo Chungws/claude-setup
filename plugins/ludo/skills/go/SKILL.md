@@ -24,7 +24,7 @@ $ARGUMENTS는 다음 중 하나:
 
 | 입력 형태 | 예시 | 동작 |
 |-----------|------|------|
-| Issue URL | `https://github.com/owner/repo/issues/42` | git-platform 스킬로 issue 내용 fetch → goal로 사용 |
+| Issue URL | `https://github.com/owner/repo/issues/42` | issue 내용 fetch → goal로 사용 |
 | Issue 번호 | `#42`, `42` | 현재 repo의 issue를 fetch → goal로 사용 |
 | GOAL.md 경로 | `./GOAL.md`, `docs/GOAL.md` | 해당 파일을 goal로 사용 |
 | 없음 | (빈 인자) | 프로젝트 루트의 `GOAL.md` 사용 |
@@ -37,15 +37,8 @@ $ARGUMENTS는 다음 중 하나:
 
 ### Issue 모드
 
-1. git-platform 스킬 절차에 따라 플랫폼 판별 (`git remote get-url origin`)
-2. issue 내용 fetch:
-   ```bash
-   # GitHub
-   gh issue view {number} --repo {owner}/{repo}
-   # GitLab
-   glab issue view {number} --repo {owner}/{repo}
-   ```
-3. fetch한 issue 내용을 goal로 사용 (GOAL.md 파일 생성 불필요)
+1. issue 내용을 fetch한다 (MCP 도구 또는 CLI 중 사용 가능한 것 사용)
+2. fetch한 issue 내용을 goal로 사용 (GOAL.md 파일 생성 불필요)
 4. issue 내용이 모호하거나 정보 부족 시:
    ```
    issue 내용이 불충분합니다. issue #{number}에 목표, 요구사항, 제약이 명확하지 않습니다.
@@ -114,7 +107,7 @@ PLAN.md를 프로젝트 루트에 생성:
 - goal 매핑 테이블 포함 (요구사항 → phase)
 
 Issue 모드이고 ISSUE_NUMBER가 있으면:
-- git-platform 스킬로 issue에 PLAN.md 내용을 댓글로 게시
+- issue에 PLAN.md 내용을 댓글로 게시
 - 댓글 앞에 '## Build Plan' 헤더 추가
 
 대화 히스토리 참조 금지.")
@@ -190,38 +183,74 @@ GATE_RESULT: PASS/FAIL, FAIL_ITEMS: [목록]")
 
 **FAIL:** fix 에이전트 → re-gate. 최대 3회.
 
-### 3c. Review (멀티에이전트, gate PASS 후)
+### 3c. Review (멀티에이전트, gate PASS 후, go가 직접 스폰)
 
-**한 메시지에서 5개를 동시에 스폰:**
+서브에이전트는 서브에이전트를 스폰할 수 없으므로, **go가 직접 모든 리뷰 에이전트를 스폰한다.**
 
-#### Group A: 코드 품질 (기존 도구)
+#### 변경 내용 분석 → 리뷰어 선택
+
+먼저 git diff를 분석하여 조건부 에이전트를 판단:
+
+```bash
+# silent-failure-hunter 필요?
+git diff {range} | grep -E '^\+.*(try|except|catch|fallback|on_error|rescue)'
+# pr-test-analyzer 필요?
+git diff --name-only {range} | grep -E 'test_|_test\.|tests/'
+# type-design-analyzer 필요?
+git diff {range} | grep -E '^\+.*(class |TypedDict|dataclass|BaseModel|NamedTuple)'
+```
+
+#### 항상 스폰 (한 메시지에서 동시에):
 
 ```
-Agent(subagent_type: "pr-review-toolkit:review-pr",
-  prompt: "Phase {N} 변경사항을 리뷰하라. 범위: {range}")
-```
-
-```
-Agent(subagent_type: "feature-dev:code-reviewer",
+Agent(subagent_type: "pr-review-toolkit:code-reviewer",
   prompt: "Phase {N} 변경사항의 버그, 보안, 코드 품질을 리뷰하라. 범위: {range}")
 ```
 
-#### Group B: 정합성 (커스텀, worktree 격리)
+```
+Agent(subagent_type: "ludo:goal-align", isolation: worktree,
+  prompt: "goal과 Phase {N} 변경사항의 정합성을 검증하라.
+  ~/claude-setup/plugins/ludo/agents/goal-align.md 를 읽고 따르라.
+  {context}")
+```
 
-3개 서브에이전트를 각각 `isolation: worktree`로 스폰.
-각 에이전트에게 `~/.claude/skills/ludo/review/{agent-file}.md` 지시 파일과 컨텍스트 전달:
+```
+Agent(subagent_type: "ludo:plan-align", isolation: worktree,
+  prompt: "PLAN.md Phase {N}과 변경사항의 정합성을 검증하라.
+  ~/claude-setup/plugins/ludo/agents/plan-align.md 를 읽고 따르라.
+  {context}")
+```
 
-| # | 파일 | 역할 |
-|---|------|------|
-| 1 | goal-align.md | GOAL.md 요구사항/제약 정합성 |
-| 2 | plan-align.md | PLAN.md 범위/수용기준/아키텍처 결정 |
-| 3 | drift.md | 새 작업 발견 → PLAN.md 추가 제안 |
+```
+Agent(subagent_type: "ludo:drift", isolation: worktree,
+  prompt: "Phase {N}에서 새 작업이 발견됐는지 탐지하라.
+  ~/claude-setup/plugins/ludo/agents/drift.md 를 읽고 따르라.
+  {context}")
+```
+
+#### 조건부 스폰 (같은 메시지에 포함):
+
+```
+# try/except 등 에러 핸들링 코드가 변경에 포함될 때:
+Agent(subagent_type: "pr-review-toolkit:silent-failure-hunter",
+  prompt: "Phase {N} 변경사항의 에러 핸들링을 검토하라. 범위: {range}")
+
+# 테스트 파일이 추가/변경됐을 때:
+Agent(subagent_type: "pr-review-toolkit:pr-test-analyzer",
+  prompt: "Phase {N} 변경사항의 테스트 커버리지와 품질을 검토하라. 범위: {range}")
+
+# 새 class, TypedDict 등 타입이 추가됐을 때:
+Agent(subagent_type: "pr-review-toolkit:type-design-analyzer",
+  prompt: "Phase {N}에서 추가된 타입 설계를 검토하라. 범위: {range}")
+```
+
+최소 4개, 최대 7개 에이전트가 **한 메시지에서 병렬로** 스폰된다.
 
 ### 3d. Review 결과 처리
 
-5개 에이전트 결과를 종합:
+go가 직접 모든 에이전트 결과를 종합:
 - 중복 제거, severity 결정 (Critical/Suggestion/Info)
-- **Critical > 0:** fix 에이전트 → **Stage 3b gate부터 다시**. 최대 2회.
+- **Critical > 0:** Agent(ludo:fix)로 수정 → **Stage 3b gate부터 다시**. 최대 2회.
 - **DISCOVERED_WORK:** drift 에이전트 결과를 PLAN.md에 새 phase로 추가.
 - **Suggestion:** 보고만, 자동 수정 안 함.
 
@@ -263,30 +292,7 @@ Agent(prompt: "/arch-review 실행하라. 이 빌드에서 변경된 영역을 �
    ```bash
    git push -u origin $(git branch --show-current)
    ```
-2. git-platform 스킬로 PR/MR 생성:
-   ```bash
-   # GitHub
-   gh pr create \
-     --title "{적절한 제목}" \
-     --body "## Summary
-   {변경 요약}
-
-   ## Issue
-   closes #{ISSUE_NUMBER}
-
-   ## Changes
-   {phase별 주요 변경 목록}" \
-     --head $(git branch --show-current)
-
-   # GitLab
-   glab mr create \
-     --title "{적절한 제목}" \
-     --description "## Summary
-   {변경 요약}
-
-   closes #{ISSUE_NUMBER}" \
-     --source-branch $(git branch --show-current)
-   ```
+2. PR/MR 생성 (제목, 변경 요약, `closes #{ISSUE_NUMBER}` 포함)
 
 **실패 시** (gate 3회 실패 등 파이프라인 중단): PR/MR을 생성하지 않는다. 실패 보고만 한다.
 

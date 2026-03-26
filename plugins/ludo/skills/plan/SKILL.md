@@ -20,7 +20,7 @@ $ARGUMENTS는 다음 중 하나:
 
 | 입력 형태 | 예시 | 동작 |
 |-----------|------|------|
-| Issue URL | `https://github.com/owner/repo/issues/42` | git-platform 스킬로 issue 내용 fetch → goal로 사용 |
+| Issue URL | `https://github.com/owner/repo/issues/42` | issue 내용 fetch → goal로 사용 |
 | Issue 번호 | `#42`, `42` | 현재 repo의 issue를 fetch → goal로 사용 |
 | GOAL.md 경로 | `./GOAL.md`, `docs/GOAL.md` | 해당 파일을 goal로 사용 |
 | 없음 | (빈 인자) | 프로젝트 루트의 `GOAL.md` 사용 |
@@ -33,15 +33,8 @@ $ARGUMENTS는 다음 중 하나:
 
 ### Issue 모드
 
-1. git-platform 스킬 절차에 따라 플랫폼 판별 (`git remote get-url origin`)
-2. issue 내용 fetch:
-   ```bash
-   # GitHub
-   gh issue view {number} --repo {owner}/{repo}
-   # GitLab
-   glab issue view {number} --repo {owner}/{repo}
-   ```
-3. fetch한 issue 내용을 goal로 사용 (GOAL.md 파일 불필요)
+1. issue 내용을 fetch한다 (MCP 도구 또는 CLI 중 사용 가능한 것 사용)
+2. fetch한 issue 내용을 goal로 사용 (GOAL.md 파일 불필요)
 4. issue 내용이 모호하거나 정보 부족 시:
    ```
    issue 내용이 불충분합니다. issue #{number}에 목표, 요구사항, 제약이 명확하지 않습니다.
@@ -90,18 +83,7 @@ $ARGUMENTS는 다음 중 하나:
 | {제약 1} | 아키텍처 결정 |
 ```
 
-6. **Issue 모드일 때**: PLAN.md 생성 후 git-platform 스킬로 issue에 댓글 게시
-   ```bash
-   # GitHub
-   gh issue comment {ISSUE_NUMBER} --body "## Build Plan
-
-   {PLAN.md 내용}"
-
-   # GitLab
-   glab issue note {ISSUE_NUMBER} --message "## Build Plan
-
-   {PLAN.md 내용}"
-   ```
+6. **Issue 모드일 때**: PLAN.md 생성 후 issue에 댓글로 게시 (`## Build Plan` 헤더 + PLAN.md 내용)
 
 ## 규칙
 - phase당 max 300줄, 3-4 커밋
