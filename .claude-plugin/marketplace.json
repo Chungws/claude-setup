@@ -1,0 +1,27 @@
+{
+  "name": "ludo-marketplace",
+  "owner": {
+    "name": "dapi"
+  },
+  "plugins": [
+    {
+      "name": "ludo",
+      "source": "./plugins/ludo",
+      "description": "Autonomous build pipeline — GOAL.md driven, multi-agent plan/build/gate/review with writer/reviewer separation",
+      "version": "0.1.0",
+      "author": {
+        "name": "dapi"
+      },
+      "skills": [
+        "./skills/go",
+        "./skills/make-goal",
+        "./skills/plan",
+        "./skills/plan-gate",
+        "./skills/build",
+        "./skills/gate",
+        "./skills/review",
+        "./skills/arch-review"
+      ]
+    }
+  ]
+}

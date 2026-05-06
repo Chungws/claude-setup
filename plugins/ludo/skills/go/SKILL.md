@@ -208,21 +208,21 @@ Agent(subagent_type: "pr-review-toolkit:code-reviewer",
 ```
 
 ```
-Agent(subagent_type: "ludo:goal-align", isolation: worktree,
+Agent(subagent_type: "ludo:goal-align",
   prompt: "goal과 Phase {N} 변경사항의 정합성을 검증하라.
   ~/claude-setup/plugins/ludo/agents/goal-align.md 를 읽고 따르라.
   {context}")
 ```
 
 ```
-Agent(subagent_type: "ludo:plan-align", isolation: worktree,
+Agent(subagent_type: "ludo:plan-align",
   prompt: "PLAN.md Phase {N}과 변경사항의 정합성을 검증하라.
   ~/claude-setup/plugins/ludo/agents/plan-align.md 를 읽고 따르라.
   {context}")
 ```
 
 ```
-Agent(subagent_type: "ludo:drift", isolation: worktree,
+Agent(subagent_type: "ludo:drift",
   prompt: "Phase {N}에서 새 작업이 발견됐는지 탐지하라.
   ~/claude-setup/plugins/ludo/agents/drift.md 를 읽고 따르라.
   {context}")
@@ -284,7 +284,20 @@ Agent(prompt: "/arch-review 실행하라. 이 빌드에서 변경된 영역을 �
 
 ## Stage 5: 완료 처리
 
-### 5a. PR/MR 생성 (Issue 모드일 때)
+### 5a. Test Quality (Advisory)
+
+모든 phase가 complete된 후, PR/MR 생성 전에 테스트 품질을 점검한다.
+
+```bash
+uv run ~/.claude/skills/test-quality/report.py --changed-only 2>/dev/null
+```
+
+- `quality-report.md`가 생성되면 요약을 완료 보고에 포함
+- uv나 mutmut이 없거나 실패하면 조용히 스킵 (blocking 아님)
+- survived mutant나 CRAP 위반이 있어도 PR/MR 생성은 진행
+  - 단, 완료 보고의 "잔여 이슈" 섹션에 기록
+
+### 5b. PR/MR 생성 (Issue 모드일 때)
 
 모든 phase가 complete이고 ISSUE_NUMBER가 있으면:
 
@@ -296,7 +309,7 @@ Agent(prompt: "/arch-review 실행하라. 이 빌드에서 변경된 영역을 �
 
 **실패 시** (gate 3회 실패 등 파이프라인 중단): PR/MR을 생성하지 않는다. 실패 보고만 한다.
 
-### 5b. 완료 보고
+### 5c. 완료 보고
 
 ```
 ## Build Complete: {goal 제목}
@@ -341,6 +354,7 @@ goal의 요구사항, 제약, 경계 조건에서 자동 도출한다.
 ### 다음
 - `/ship` — MR 생성 (GOAL.md 모드일 때)
 - `/ludo:review` — 수동 추가 리뷰
+- `/test-quality --fix` — survived mutant / CRAP 위반 수동 수정
 ```
 
 ## 제약
