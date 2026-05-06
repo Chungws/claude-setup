@@ -38,5 +38,15 @@ Plan mode 완료 후, 구현 전에 수용 기준을 Red 테스트로 먼저 작
 
 - **Every commit**: Layer 1 + Layer 2 (fast, < 1 min).
 - **Scheduled/pre-merge**: Layer 3 (slow, external dependencies).
+- **Pre-MR**: `/test-quality` — mutation testing + CRAP score (수 분 소요, non-blocking advisory).
+  Layer 1/2가 통과해도 테스트가 의미 있는지는 보장하지 않는다. mutation testing이 이를 검증.
+
+## Mutation Testing과 레이어의 관계
+
+`/test-quality`이 survived mutant를 발견하면:
+- **경계값/조건 누락** → Layer 2에 추가 (구체적 예시: `assert f(90) == "A"`)
+- **불변 조건 누락** → Layer 1에 추가 (property: `score >= 90`이면 항상 `"A"`)
+
+CRAP 위반(> 5)으로 함수를 쪼갠 경우, 새 함수마다 Layer 2 테스트가 따라와야 한다.
 
 For TDD mechanics and test writing patterns → see `testing/tdd-principles` skill.
