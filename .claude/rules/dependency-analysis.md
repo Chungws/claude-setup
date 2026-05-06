@@ -10,9 +10,11 @@
 
 ## 예시
 
+```bash
 # parse_claude_result 제거 전
 grep -r "parse_claude_result" src/ tests/
 # → node_repo.py, ssh_node_repo.py에서 import → 같은 커밋에서 교체
+```
 
 ## 금지
 

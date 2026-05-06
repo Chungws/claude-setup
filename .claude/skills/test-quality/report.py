@@ -56,6 +56,9 @@ def get_coverage() -> dict:
         if result.returncode != 0:
             print("pytest --cov 실행 실패. coverage.json이 없습니다.", file=sys.stderr)
             return {}
+    if not cov_path.exists():
+        print("coverage.json이 생성되지 않았습니다. --cov-report=json 설정을 확인하세요.", file=sys.stderr)
+        return {}
     with open(cov_path) as f:
         return json.load(f)
 
