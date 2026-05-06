@@ -56,7 +56,19 @@ dev = [
     "pytest-asyncio>=0.24",
     "mypy>=1.13",
     "ruff>=0.8",
+    "mutmut>=2.4,<3",
+    "radon>=6.0",
 ]
+```
+
+### mutmut 설정
+
+`pyproject.toml`에 추가 (소스/테스트 경로는 프로젝트에 맞게 조정):
+
+```toml
+[tool.mutmut]
+paths_to_mutate = "src/"
+runner = "python -m pytest tests/ -x -q --no-header"
 ```
 
 ### pytest 설정 적용 시
@@ -84,6 +96,8 @@ ignore_missing_imports = true
 - [x] ruff (N개 카테고리, M개 ignore)
 - [x] mypy (strict mode)
 - [x] pytest (coverage 100%, Layer 3 마커 분리)
+- [x] mutmut (mutation testing)
+- [x] radon (cyclomatic complexity / CRAP score)
 
 실행 방법:
   uv run ruff check .          # 린트
@@ -92,6 +106,53 @@ ignore_missing_imports = true
   uv run mypy src/             # 타입 체크
   uv run pytest                # 테스트 (Layer 1+2, with coverage)
   uv run pytest -m integration # Integration 테스트 (Layer 3)
+  /test-quality                # MR 직전 mutation + CRAP 심층 분석
+```
+
+## Step 6: Claude Code 품질 Hook 설정
+
+파일 수정 후 자동으로 ruff가 돌도록 settings.json (또는 settings.local.json)에 PostToolUse hook을 추가한다.
+
+사용자에게 물어본다:
+
+```
+Claude Code edit hook을 설정할까요?
+1. 설정 (Write/Edit 후 자동 ruff check --fix && ruff format)
+2. 건너뛰기
+```
+
+설정 시 추가할 hook:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ${CLAUDE_PROJECT_DIR} && ruff check --fix --quiet ${CLAUDE_FILE_PATH} 2>/dev/null && ruff format --quiet ${CLAUDE_FILE_PATH} 2>/dev/null || true",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### hook 설정 위치
+
+- **글로벌** (~/.claude/settings.json): 모든 Python 프로젝트에 적용
+- **프로젝트** (.claude/settings.local.json): 해당 프로젝트만 적용
+
+기존 hooks 섹션이 있으면 병합한다 (덮어쓰기 금지).
+
+### 완료 요약에 추가
+
+```
+- [x] Claude Code hook (Write/Edit 후 자동 ruff)
 ```
 
 ## 주의사항

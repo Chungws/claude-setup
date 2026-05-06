@@ -37,6 +37,7 @@ status: in-progress
 - 논문: 0편
 - 레포: 0개
 - 아티클: 0편
+- 쓰레드: 0개
 
 ## 생성된 파일
 (목록)
@@ -76,7 +77,7 @@ echo "TOPIC_SLUG=$TOPIC_SLUG"
 6. **SESSION_LOG 업데이트**: 키워드 필드를 채운다
 
 ## Phase 2: Parallel Collection
-확인 후 3개 서브에이전트를 Agent tool로 병렬 스폰한다.
+확인 후 4개 서브에이전트를 Agent tool로 병렬 스폰한다.
 각 서브에이전트의 프롬프트에 **반드시** 다음을 모두 포함:
 
 ```
@@ -94,7 +95,7 @@ echo "TOPIC_SLUG=$TOPIC_SLUG"
 - 작업 완료 후 생성한 파일 경로 목록을 반환하라
 ```
 
-3개를 동시에 스폰하고 결과를 기다린다.
+4개를 동시에 스폰하고 결과를 기다린다.
 
 ## Phase 3: Synthesis
 서브에이전트 결과 수합 후:
@@ -127,6 +128,7 @@ status: done
 papers_count: N
 repos_count: N
 articles_count: N
+threads_count: N
 ---
 
 # {Topic} 리서치 요약
@@ -239,7 +241,7 @@ Phase 4까지의 파일 쓰기가 대화를 밀어올리므로, 이 출력이 �
 - "{궁금할 수 있는 질문}" → `/research {서브토픽}`
 
 ### 수집 통계
-논문 N편 / 레포 N개 / 아티클 N편 / 인사이트 N개
+논문 N편 / 레포 N개 / 아티클 N편 / 쓰레드 N개 / 인사이트 N개
 허브 노트: {경로}
 ```
 
