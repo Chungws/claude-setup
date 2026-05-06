@@ -37,13 +37,13 @@ $ARGUMENTS는 다음 중 하나:
 
 1. issue 내용을 fetch한다 (MCP 도구 또는 CLI 중 사용 가능한 것 사용)
 2. fetch한 issue 내용을 수정 지시로 사용
-4. issue 내용이 모호하거나 정보 부족 시:
+3. issue 내용이 모호하거나 정보 부족 시:
    ```
    issue 내용이 불충분합니다. issue #{number}에 수정 대상과 기대 동작이 명확하지 않습니다.
    issue를 보강한 후 다시 실행해주세요.
    ```
    → 종료. PR 미생성.
-5. `ISSUE_NUMBER`와 `ISSUE_URL`을 파이프라인 전체에서 참조할 수 있도록 기억한다.
+4. `ISSUE_NUMBER`와 `ISSUE_URL`을 파이프라인 전체에서 참조할 수 있도록 기억한다.
 
 ---
 

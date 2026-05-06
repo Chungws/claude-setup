@@ -35,13 +35,13 @@ $ARGUMENTS는 다음 중 하나:
 
 1. issue 내용을 fetch한다 (MCP 도구 또는 CLI 중 사용 가능한 것 사용)
 2. fetch한 issue 내용을 goal로 사용 (GOAL.md 파일 불필요)
-4. issue 내용이 모호하거나 정보 부족 시:
+3. issue 내용이 모호하거나 정보 부족 시:
    ```
    issue 내용이 불충분합니다. issue #{number}에 목표, 요구사항, 제약이 명확하지 않습니다.
    issue를 보강한 후 다시 실행해주세요.
    ```
    → 종료. PLAN.md 미생성.
-5. `ISSUE_NUMBER`를 기억한다 (댓글 게시에 사용)
+4. `ISSUE_NUMBER`를 기억한다 (댓글 게시에 사용)
 
 ### GOAL.md 모드 (기존 동작)
 

@@ -56,13 +56,7 @@ arch-review 패턴으로 컨텍스트를 수집하여 서브에이전트에 전�
 
 ```
 Agent(
-  subagent_type: "pr-review-toolkit:review-pr",
-  prompt: "Phase {N}의 변경사항을 리뷰하라. git diff 범위: {range}")
-```
-
-```
-Agent(
-  subagent_type: "feature-dev:code-reviewer",
+  subagent_type: "pr-review-toolkit:code-reviewer",
   prompt: "Phase {N}의 변경사항을 리뷰하라.
   버그, 로직 에러, 보안, 코드 품질, 프로젝트 컨벤션 준수를 확인하라.
   변경 범위: {range}")

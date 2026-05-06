@@ -39,13 +39,13 @@ $ARGUMENTS는 다음 중 하나:
 
 1. issue 내용을 fetch한다 (MCP 도구 또는 CLI 중 사용 가능한 것 사용)
 2. fetch한 issue 내용을 goal로 사용 (GOAL.md 파일 생성 불필요)
-4. issue 내용이 모호하거나 정보 부족 시:
+3. issue 내용이 모호하거나 정보 부족 시:
    ```
    issue 내용이 불충분합니다. issue #{number}에 목표, 요구사항, 제약이 명확하지 않습니다.
    issue를 보강한 후 다시 실행해주세요.
    ```
    → 종료. PR 미생성.
-5. `ISSUE_NUMBER`와 `ISSUE_URL`을 파이프라인 전체에서 참조할 수 있도록 기억한다.
+4. `ISSUE_NUMBER`와 `ISSUE_URL`을 파이프라인 전체에서 참조할 수 있도록 기억한다.
 
 ### GOAL.md 모드 (기존 동작)
 
@@ -301,11 +301,18 @@ uv run ~/.claude/skills/test-quality/report.py --changed-only 2>/dev/null
 
 모든 phase가 complete이고 ISSUE_NUMBER가 있으면:
 
-1. 작업 브랜치를 push:
+1. 현재 브랜치가 main/develop이면 feature 브랜치 생성:
+   ```bash
+   current=$(git branch --show-current)
+   if [[ "$current" == "main" || "$current" == "develop" ]]; then
+     git checkout -b feature/$(echo "{ISSUE_NUMBER}-{goal-slug}" | tr ' ' '-')
+   fi
+   ```
+2. 작업 브랜치를 push:
    ```bash
    git push -u origin $(git branch --show-current)
    ```
-2. PR/MR 생성 (제목, 변경 요약, `closes #{ISSUE_NUMBER}` 포함)
+3. PR/MR 생성 (제목, 변경 요약, `closes #{ISSUE_NUMBER}` 포함)
 
 **실패 시** (gate 3회 실패 등 파이프라인 중단): PR/MR을 생성하지 않는다. 실패 보고만 한다.
 
